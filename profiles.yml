@@ -1,11 +1,11 @@
 # dbt looks for this file in the project folder first.
 # Local runs use DuckDB; set the env vars below and add --target snowflake for Snowflake.
-commerce_pulse:
+throughline:
   target: dev
   outputs:
     dev:
       type: duckdb
-      path: warehouse/commerce_pulse.duckdb
+      path: warehouse/throughline.duckdb
       threads: 4
     snowflake:
       type: snowflake
@@ -14,6 +14,6 @@ commerce_pulse:
       password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
       role: "{{ env_var('SNOWFLAKE_ROLE', 'ACCOUNTADMIN') }}"
       warehouse: "{{ env_var('SNOWFLAKE_WAREHOUSE', 'COMPUTE_WH') }}"
-      database: COMMERCE_PULSE
+      database: THROUGHLINE
       schema: ANALYTICS
       threads: 8

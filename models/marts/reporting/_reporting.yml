@@ -54,7 +54,7 @@ exposures:
   - name: executive_kpi_dashboard
     type: dashboard
     maturity: medium
-    url: https://github.com/evannwilsonn/commerce-pulse/tree/main/dashboard
+    url: https://github.com/evannwilsonn/throughline/tree/main/dashboard
     description: Executive KPI dashboard built from the reporting marts.
     depends_on:
       - ref('rpt_kpi_monthly')

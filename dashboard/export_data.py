@@ -12,7 +12,7 @@ from pathlib import Path
 import duckdb
 
 ROOT = Path(__file__).resolve().parents[1]
-DB = ROOT / "warehouse" / "commerce_pulse.duckdb"
+DB = ROOT / "warehouse" / "throughline.duckdb"
 OUT = ROOT / "dashboard" / "data.json"
 
 

@@ -1,8 +1,8 @@
-# Commerce Pulse: Executive KPI Dashboard
+# Throughline: Executive KPI Dashboard
 
 An executive KPI dashboard for an e-commerce marketplace, built on about 100,000 **real orders** from the Olist Brazilian E-Commerce Public Dataset. Each KPI is defined once in a governed catalog, computed once in dbt, and checked against a target. The dashboard opens with a written brief: what happened this month, which KPIs are on or off track, and why.
 
-![Commerce Pulse dashboard](docs/dashboard.png)
+![Throughline dashboard](docs/dashboard.png)
 
 ## What an exec gets
 
@@ -63,8 +63,8 @@ flowchart LR
 ## Run it
 
 ```bash
-git clone https://github.com/evannwilsonn/commerce-pulse.git
-cd commerce-pulse
+git clone https://github.com/evannwilsonn/throughline.git
+cd throughline
 python -m venv .venv && source .venv/bin/activate
 make setup   # pip install -r requirements.txt
 make all     # extract → load → dbt build → export dashboard data

@@ -4,8 +4,8 @@
 --      snowsql -a <account> -u <user> -f ingest/snowflake_load.sql
 -- Every column lands as VARCHAR, plus the same audit columns, and dbt does the typing.
 
-create database if not exists commerce_pulse;
-use database commerce_pulse;
+create database if not exists throughline;
+use database throughline;
 create schema if not exists raw_olist;
 use schema raw_olist;
 

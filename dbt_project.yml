@@ -1,7 +1,7 @@
-name: commerce_pulse
+name: throughline
 version: "1.0.0"
 config-version: 2
-profile: commerce_pulse
+profile: throughline
 
 model-paths: ["models"]
 seed-paths: ["seeds"]
@@ -12,7 +12,7 @@ target-path: "target"
 clean-targets: ["target", "dbt_packages"]
 
 models:
-  commerce_pulse:
+  throughline:
     staging:
       +materialized: view
       +schema: staging
@@ -27,7 +27,7 @@ models:
         +schema: reporting
 
 seeds:
-  commerce_pulse:
+  throughline:
     +schema: reference
 
 vars:

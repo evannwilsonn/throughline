@@ -39,7 +39,7 @@ SOURCES = {
 def fetch(url: str, attempts: int = 4) -> bytes:
     for i in range(attempts):
         try:
-            req = urllib.request.Request(url, headers={"User-Agent": "commerce-pulse-extract/1.0"})
+            req = urllib.request.Request(url, headers={"User-Agent": "throughline-extract/1.0"})
             with urllib.request.urlopen(req, timeout=120) as r:
                 return r.read()
         except Exception as exc:

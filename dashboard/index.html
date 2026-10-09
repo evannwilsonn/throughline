@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Commerce Pulse</title>
+<title>Throughline</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
 <style>
@@ -101,7 +101,7 @@ footer.lin a{color:var(--text-2)}
 <div class="wrap">
   <header class="top">
     <div class="brand">
-      <h1>Commerce Pulse <span class="badge">Real public data</span></h1>
+      <h1>Throughline <span class="badge">Real public data</span></h1>
       <p>Executive KPI dashboard · Olist marketplace, Brazil · values in R$</p>
     </div>
     <div class="controls">
@@ -276,7 +276,7 @@ function renderStatic(){
     `<b>Targets are illustrative.</b> Olist didn't publish its plan, so targets were set for this project in the KPI catalog and can be changed in one place.`,
   ];
   $('notes').innerHTML=notes.map(n=>`<li>${n}</li>`).join('');
-  $('lineage').innerHTML=`Built from <code>reporting.rpt_kpi_monthly</code> and four supporting marts (dbt) · ${q.raw_orders.toLocaleString()} orders · Olist Brazilian E-Commerce Public Dataset, CC BY-NC-SA 4.0 · exported ${D.generated} · <a href="https://github.com/evannwilsonn/commerce-pulse">github.com/evannwilsonn/commerce-pulse</a>`;
+  $('lineage').innerHTML=`Built from <code>reporting.rpt_kpi_monthly</code> and four supporting marts (dbt) · ${q.raw_orders.toLocaleString()} orders · Olist Brazilian E-Commerce Public Dataset, CC BY-NC-SA 4.0 · exported ${D.generated} · <a href="https://github.com/evannwilsonn/throughline">github.com/evannwilsonn/throughline</a>`;
 }
 
 function setMonth(m){ state.month=m; $('month').value=m; renderAll(); }
