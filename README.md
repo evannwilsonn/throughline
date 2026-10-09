@@ -73,15 +73,19 @@ make serve   # http://localhost:8000
 
 ## Run it on Snowflake
 
-The models use cross-database macros (`macros/cross_db.sql`), so the same project runs on DuckDB or Snowflake. The Snowflake path is written to run as-is but has only been run end to end on DuckDB so far.
+This project has been built end to end on Snowflake (`dbt build --target snowflake`). Every test passes there, and the reporting tables match the DuckDB build number for number. The models use cross-database macros (`macros/cross_db.sql`), so the same SQL runs on both.
+
+Sign-in is key-pair, so no password is stored anywhere. After running the pipeline locally (`make all`), copy the raw layer up and build:
 
 ```bash
-pip install dbt-snowflake
-python ingest/extract.py
-snowsql -a <account> -u <user> -f ingest/snowflake_load.sql
-export SNOWFLAKE_ACCOUNT=<account> SNOWFLAKE_USER=<user> SNOWFLAKE_PASSWORD=<password>
+pip install dbt-snowflake snowflake-connector-python
+export SNOWFLAKE_ACCOUNT=<org-account> SNOWFLAKE_USER=<user>
+export SNOWFLAKE_PRIVATE_KEY_PATH=~/.snowflake/rsa_key.p8 SNOWFLAKE_ROLE=SYSADMIN
+python ingest/load_snowflake.py --duckdb warehouse/throughline.duckdb --database THROUGHLINE --schemas raw_olist
 dbt build --target snowflake
 ```
+
+`ingest/load_snowflake.py` writes each raw table to Parquet, uploads it to an internal stage, loads it with `COPY INTO` and checks the row counts against DuckDB. `ingest/snowflake_load.sql` is the equivalent SnowSQL script for loading straight from the extracted files.
 
 ## Data and license
 
