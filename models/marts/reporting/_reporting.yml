@@ -1,0 +1,66 @@
+version: 2
+
+models:
+  - name: rpt_kpi_monthly
+    description: >
+      Executive scorecard, one row per KPI per month, with prior month, same month last year,
+      target and status. Only complete months (Jan 2017 to Aug 2018) are reported.
+    data_tests:
+      - unique_combination:
+          arguments: {columns: [month_start, kpi_id]}
+    columns:
+      - name: kpi_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments: {to: ref('kpi_definitions'), field: kpi_id}
+      - name: value
+        data_tests: [not_null]
+      - name: status
+        data_tests:
+          - accepted_values:
+              arguments: {values: ['On track', 'Watch', 'Off track']}
+
+  - name: rpt_category_monthly
+    data_tests:
+      - unique_combination:
+          arguments: {columns: [month_start, category]}
+
+  - name: rpt_state_monthly
+    data_tests:
+      - unique_combination:
+          arguments: {columns: [month_start, state]}
+
+  - name: rpt_delivery_experience
+    columns:
+      - name: delivery_bucket
+        data_tests: [unique, not_null]
+      - name: avg_review_score
+        data_tests:
+          - value_between:
+              arguments: {min_value: 1, max_value: 5}
+
+  - name: rpt_cohort_retention
+    data_tests:
+      - unique_combination:
+          arguments: {columns: [cohort_month, months_since_first]}
+    columns:
+      - name: retention_rate
+        data_tests:
+          - value_between:
+              arguments: {min_value: 0, max_value: 1}
+
+exposures:
+  - name: executive_kpi_dashboard
+    type: dashboard
+    maturity: medium
+    url: https://github.com/evannwilsonn/commerce-pulse/tree/main/dashboard
+    description: Executive KPI dashboard built from the reporting marts.
+    depends_on:
+      - ref('rpt_kpi_monthly')
+      - ref('rpt_category_monthly')
+      - ref('rpt_state_monthly')
+      - ref('rpt_delivery_experience')
+      - ref('rpt_cohort_retention')
+    owner:
+      name: Evan Wilson

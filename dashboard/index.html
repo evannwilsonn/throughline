@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Commerce Pulse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#f4f5f7;--surface:#ffffff;--surface-2:#f8f9fb;--line:#e3e5ea;--line-2:#d3d6dd;
+  --text:#14161c;--text-2:#4a4f5c;--text-3:#767b88;
+  --s1:#2a6fdb;--s2:#a8630f;--s3:#16865a;--up:#16865a;--down:#c2412d;--focus:#2a6fdb;
+  --ok:#16865a;--ok-bg:rgba(22,134,90,.10);--warn:#a8630f;--warn-bg:rgba(168,99,15,.12);--bad:#c2412d;--bad-bg:rgba(194,65,45,.10);
+  --font:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;--bg:#0c0c12;--surface:#13131b;--surface-2:#191922;--line:#25252f;--line-2:#33333f;
+  --text:#f2f3f6;--text-2:#b4b7c2;--text-3:#878a96;--s1:#3d7eff;--s2:#c27a1a;--s3:#1fa36b;--up:#4cc38a;--down:#ff7a6b;--focus:#7ea8ff;
+  --ok:#4cc38a;--ok-bg:rgba(76,195,138,.12);--warn:#e0a24a;--warn-bg:rgba(224,162,74,.13);--bad:#ff7a6b;--bad-bg:rgba(255,122,107,.12)}}
+:root[data-theme="dark"]{
+  color-scheme:dark;--bg:#0c0c12;--surface:#13131b;--surface-2:#191922;--line:#25252f;--line-2:#33333f;
+  --text:#f2f3f6;--text-2:#b4b7c2;--text-3:#878a96;--s1:#3d7eff;--s2:#c27a1a;--s3:#1fa36b;--up:#4cc38a;--down:#ff7a6b;--focus:#7ea8ff;
+  --ok:#4cc38a;--ok-bg:rgba(76,195,138,.12);--warn:#e0a24a;--warn-bg:rgba(224,162,74,.13);--bad:#ff7a6b;--bad-bg:rgba(255,122,107,.12)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 var(--font)}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1320px;margin:0 auto;padding:24px 20px 48px}
+header.top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.brand h1{margin:0;font-size:24px;font-weight:700;letter-spacing:-.01em}
+.brand p{margin:4px 0 0;color:var(--text-2);font-size:14px}
+.badge{display:inline-block;margin-left:8px;font:500 11px var(--mono);color:var(--text-3);border:1px solid var(--line-2);border-radius:999px;padding:2px 8px;vertical-align:3px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+select{font:500 13px var(--font);color:var(--text);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 12px;cursor:pointer}
+.seg{display:flex;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:3px}
+.seg button{font:500 13px var(--font);color:var(--text-2);background:none;border:0;border-radius:7px;padding:7px 12px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--surface-2);color:var(--text);box-shadow:inset 0 0 0 1px var(--line-2)}
+.brief{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:12px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:center}
+.brief p{margin:0;font-size:15.5px;line-height:1.55;max-width:90ch}
+.brief p b{font-weight:600}
+.tally{display:flex;gap:8px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;font:600 12px var(--font);border-radius:999px;padding:3px 10px;white-space:nowrap}
+.pill.ok{color:var(--ok);background:var(--ok-bg)}.pill.warn{color:var(--warn);background:var(--warn-bg)}.pill.bad{color:var(--bad);background:var(--bad-bg)}.pill.na{color:var(--text-3);background:var(--surface-2)}
+.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.cat-h{margin:18px 2px 8px;font:600 12px var(--font);letter-spacing:.06em;text-transform:uppercase;color:var(--text-3)}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.tile .row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.tile .eyebrow{font:500 10.5px var(--font);letter-spacing:.06em;text-transform:uppercase;color:var(--text-3)}
+.tile .lbl{font-size:13px;font-weight:500;color:var(--text-2)}
+.tile .v{font-size:26px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.tile .cmp{font-size:12.5px;color:var(--text-3);display:flex;gap:12px;flex-wrap:wrap}
+.tile .cmp b{font-weight:600}
+.tile svg{display:block;width:100%;height:34px;margin-top:4px}
+.good{color:var(--up)}.badc{color:var(--down)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;min-width:0}
+.card header{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.card h2{margin:0;font-size:15px;font-weight:600}
+.card .sub{font-size:12.5px;color:var(--text-3)}
+.full{grid-column:1/-1}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--text-2)}
+.legend i{display:inline-block;width:12px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.legend i.ln{height:2px;vertical-align:3px}
+.plot{position:relative}
+.plot svg{display:block;width:100%;height:auto;overflow:visible}
+.ax{font:11px var(--font);fill:var(--text-3)}
+.gridl{stroke:var(--line);stroke-width:1}
+.tip{position:absolute;pointer-events:none;background:var(--surface);border:1px solid var(--line-2);border-radius:10px;padding:8px 10px;font-size:12.5px;white-space:nowrap;opacity:0;transform:translate(-50%,calc(-100% - 12px));transition:opacity .12s;z-index:3;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.tip.on{opacity:1}.tip b{font-weight:600}.tip span{color:var(--text-2)}
+.callout{margin:12px 0 0;padding:10px 12px;border-left:3px solid var(--s1);background:var(--surface-2);border-radius:0 8px 8px 0;font-size:13.5px;color:var(--text-2)}
+.callout b{color:var(--text);font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{font-weight:500;color:var(--text-3);text-align:right;padding:8px 6px;border-bottom:1px solid var(--line);font-size:12px;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+td{padding:9px 6px;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td .wbar{display:inline-block;height:8px;border-radius:3px;background:var(--s1);margin-right:8px;vertical-align:0}
+.dbar{display:grid;grid-template-columns:150px minmax(0,1fr) 92px;gap:10px;align-items:center;padding:6px 0;font-size:13px}
+.dbar .track{height:14px;background:var(--surface-2);border-radius:4px;overflow:hidden}
+.dbar .fill{height:100%;border-radius:4px}
+.dbar .n{text-align:right;font-variant-numeric:tabular-nums;color:var(--text-2)}
+.dbar small{display:block;color:var(--text-3);font-size:11.5px}
+.heat{display:grid;gap:3px;font-size:11.5px;font-variant-numeric:tabular-nums}
+.heat .c{padding:5px 2px;text-align:center;border-radius:4px;color:var(--text)}
+.heat .h{color:var(--text-3);text-align:center;padding:4px 0}
+.heat .rl{color:var(--text-2);text-align:left;padding:5px 4px;white-space:nowrap}
+.defs{margin:0;padding:0;list-style:none;font-size:13px}
+.defs li{padding:7px 0;border-bottom:1px solid var(--line);color:var(--text-2)}
+.defs li:last-child{border-bottom:0}
+.defs b{color:var(--text);font-weight:600}
+footer.lin{margin-top:18px;color:var(--text-3);font-size:12.5px;line-height:1.6}
+footer.lin code{font-family:var(--mono);font-size:12px;color:var(--text-2)}
+footer.lin a{color:var(--text-2)}
+@media (max-width:1100px){.tiles{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:900px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.grid{grid-template-columns:1fr}.brief{grid-template-columns:1fr}}
+@media (max-width:560px){.tiles{grid-template-columns:1fr}.hide-sm{display:none}.dbar{grid-template-columns:110px minmax(0,1fr) 80px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>Commerce Pulse <span class="badge">Real public data</span></h1>
+      <p>Executive KPI dashboard · Olist marketplace, Brazil · values in R$</p>
+    </div>
+    <div class="controls">
+      <label><span hidden>Month</span><select id="month" aria-label="Reporting month"></select></label>
+      <div class="seg" role="group" aria-label="Compare against">
+        <button type="button" data-c="target" aria-pressed="true">vs. target</button>
+        <button type="button" data-c="yoy" aria-pressed="false">vs. last year</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="brief" aria-label="Summary"><p id="brief"></p><div class="tally" id="tally"></div></section>
+
+  <section id="scorecard" aria-label="KPI scorecard"></section>
+
+  <section class="grid">
+    <article class="card full">
+      <header><h2>GMV by month vs. plan</h2>
+        <div class="legend"><span><i style="background:var(--s1)"></i>Actual GMV</span><span><i class="ln" style="background:var(--s2)"></i>Plan (last year + 20%)</span></div></header>
+      <div class="plot" id="gmv"></div>
+    </article>
+    <article class="card">
+      <header><h2>Late deliveries drive bad reviews</h2><span class="sub">Delivered orders, Jan 2017 to Aug 2018</span></header>
+      <div id="delivery"></div>
+      <p class="callout" id="deliveryNote"></p>
+    </article>
+    <article class="card">
+      <header><h2>Top categories</h2><span class="sub" id="catSub"></span></header>
+      <div style="overflow-x:auto"><table id="cats"></table></div>
+    </article>
+    <article class="card">
+      <header><h2>Customers rarely come back</h2><span class="sub">Share of each monthly cohort ordering again N months later</span></header>
+      <div id="cohort" style="overflow-x:auto"></div>
+      <p class="callout" id="cohortNote"></p>
+    </article>
+    <article class="card">
+      <header><h2>States</h2><span class="sub" id="stateSub"></span></header>
+      <div style="overflow-x:auto"><table id="states"></table></div>
+    </article>
+    <article class="card">
+      <header><h2>KPI definitions</h2><span class="sub">One governed definition per metric, from <code>seeds/kpi_definitions.csv</code></span></header>
+      <ul class="defs" id="defs"></ul>
+    </article>
+    <article class="card">
+      <header><h2>Data notes</h2><span class="sub">Counted from the warehouse on every build</span></header>
+      <ul class="defs" id="notes"></ul>
+    </article>
+  </section>
+
+  <footer class="lin" id="lineage"></footer>
+</div>
+
+<script>
+(async function(){
+const D = window.CP_DATA || await fetch('data.json').then(r=>r.json());
+const $ = id => document.getElementById(id);
+const objs = t => t.rows.map(r=>Object.fromEntries(t.columns.map((c,i)=>[c,r[i]])));
+const cat = objs(D.kpi_catalog), kpis = objs(D.kpis), cats = objs(D.categories), states = objs(D.states), deliv = objs(D.delivery), coh = objs(D.cohorts);
+const CAT = Object.fromEntries(cat.map(k=>[k.kpi_id,k]));
+const months = [...new Set(kpis.map(r=>r.month_start))].sort();
+const K = {}; kpis.forEach(r=>{(K[r.month_start] ||= {})[r.kpi_id]=r});
+let state = {month: months[months.length-1], cmp:'target'};
+
+const mLabel = (m,long) => new Date(m+'-15').toLocaleDateString('en-US',long?{month:'long',year:'numeric'}:{month:'short',year:'2-digit'});
+const brl = (v,d) => { if(v==null) return '–'; const a=Math.abs(v); return a>=1e6?'R$'+(v/1e6).toFixed(2)+'M':a>=1e4?'R$'+Math.round(v/1e3)+'K':'R$'+v.toFixed(d??0); };
+const fmt = (unit,v) => v==null?'–': unit==='currency'?brl(v,2): unit==='percent'?(v*100).toFixed(1)+'%': unit==='days'?v.toFixed(1)+' d': unit==='score'?v.toFixed(2): Math.round(v).toLocaleString('en-US');
+const sp = (v,d=1) => v==null||!isFinite(v)?'–':(v>0?'+':'')+(v*100).toFixed(d)+'%';
+const pillCls = s => s==='On track'?'ok':s==='Watch'?'warn':s==='Off track'?'bad':'na';
+const better = (k,delta) => delta==null?'':((CAT[k].direction==='up')===(delta>0)?'good':'badc');
+
+function renderBrief(){
+  const m=K[state.month], g=m.gmv, o=m.on_time_rate, r=m.avg_review_score;
+  const st=Object.values(m).filter(x=>x.status);
+  const n={ok:st.filter(x=>x.status==='On track').length,w:st.filter(x=>x.status==='Watch'),b:st.filter(x=>x.status==='Off track')};
+  const vsT=g.target?`, ${g.value>=g.target?'<b class="good">'+sp(g.value/g.target-1,0)+' above</b>':'<b class="badc">'+sp(g.value/g.target-1,0)+' below</b>'} plan`:'';
+  const yoy=g.prior_year_value?` and ${sp(g.value/g.prior_year_value-1,0)} vs. ${mLabel(state.month).split(' ')[0]} last year`:'';
+  const names=a=>a.map(x=>CAT[x.kpi_id].kpi_name.toLowerCase()).join(', ');
+  let s=`<b>${mLabel(state.month,1)}:</b> GMV of <b>${brl(g.value)}</b>${vsT}${yoy}. `;
+  s+= st.length?`${n.ok} of ${st.length} targeted KPIs are on track`+(n.b.length?`; off track: ${names(n.b)}`:'')+(n.w.length?`; watch: ${names(n.w)}`:'')+'. ':'No targets this month (the plan starts once there is a prior year to grow from). ';
+  s+=`${(o.value*100).toFixed(1)}% of deliveries arrived on time and reviews averaged ${r.value.toFixed(2)}.`;
+  $('brief').innerHTML=s;
+  $('tally').innerHTML=st.length?`<span class="pill ok">${n.ok} on track</span><span class="pill warn">${n.w.length} watch</span><span class="pill bad">${n.b.length} off track</span>`:'<span class="pill na">No plan yet</span>';
+}
+
+function spark(k){
+  const i=months.indexOf(state.month), ms=months.slice(Math.max(0,i-11),i+1), vs=ms.map(m=>K[m][k].value);
+  const W=200,H=34,lo=Math.min(...vs),hi=Math.max(...vs),y=v=>hi===lo?H/2:3+(H-6)*(1-(v-lo)/(hi-lo)),x=j=>ms.length===1?W/2:2+(W-4)*j/(ms.length-1);
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="${vs.map((v,j)=>(j?'L':'M')+x(j).toFixed(1)+' '+y(v).toFixed(1)).join('')}" fill="none" stroke="var(--s1)" stroke-width="1.6" vector-effect="non-scaling-stroke"/><circle cx="${x(vs.length-1)}" cy="${y(vs[vs.length-1])}" r="2.5" fill="var(--s1)"/></svg>`;
+}
+
+function renderScorecard(){
+  const m=K[state.month]; let html='<h2 class="cat-h">Scorecard</h2><div class="tiles">';
+  for(const c of cat){
+    const r=m[c.kpi_id], mom=r.prior_month_value?r.value/r.prior_month_value-1:null, yoy=r.prior_year_value?r.value/r.prior_year_value-1:null;
+    const main = state.cmp==='target'
+      ? (r.target!=null?`<span>Target <b>${fmt(c.unit,r.target)}</b></span>`:'<span>No target yet</span>')
+      : `<span>Last year <b>${fmt(c.unit,r.prior_year_value)}</b></span>`;
+    html+=`<div class="tile" title="${c.definition}"><span class="eyebrow">${c.category}</span><div class="row"><span class="lbl">${c.kpi_name}</span>${state.cmp==='target'?`<span class="pill ${pillCls(r.status)}">${r.status||'n/a'}</span>`:''}</div>
+      <div class="v">${fmt(c.unit,r.value)}</div>
+      <div class="cmp">${main}<span>YoY <b class="${better(c.kpi_id,yoy)}">${sp(yoy)}</b></span><span>MoM <b class="${better(c.kpi_id,mom)}">${sp(mom)}</b></span></div>${spark(c.kpi_id)}</div>`;
+  }
+  $('scorecard').innerHTML=html+'</div>';
+}
+
+function tipEl(host){let t=host.querySelector('.tip');if(!t){t=document.createElement('div');t.className='tip';host.appendChild(t)}return t}
+function renderGmv(){
+  const host=$('gmv'), W=Math.max(300,host.clientWidth||900), H=W<500?220:260, L=60, R=12, T=10, B=26, n=months.length;
+  const data=months.map(m=>({m,v:K[m].gmv.value,t:K[m].gmv.target}));
+  const hi=Math.ceil(Math.max(...data.map(d=>Math.max(d.v,d.t||0)))/2e5)*2e5, y=v=>T+(H-T-B)*(1-v/hi);
+  const bw=(W-L-R)/n, x=i=>L+bw*i+bw/2;
+  let g=''; for(let v=0;v<=hi;v+=hi/4) g+=`<line class="gridl" x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}"/><text class="ax" x="${L-8}" y="${y(v)+4}" text-anchor="end">${brl(v)}</text>`;
+  const bars=data.map((d,i)=>`<rect x="${(x(i)-bw*.36).toFixed(1)}" y="${y(d.v).toFixed(1)}" width="${(bw*.72).toFixed(1)}" height="${(y(0)-y(d.v)).toFixed(1)}" rx="3" fill="var(--s1)" opacity="${d.m===state.month?1:.45}"/>`).join('');
+  const tl=data.map((d,i)=>d.t==null?null:[x(i),y(d.t)]).filter(Boolean);
+  const plan=tl.length?`<path d="${tl.map((p,j)=>(j?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join('')}" fill="none" stroke="var(--s2)" stroke-width="2" stroke-dasharray="5 4"/>`+tl.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="3" fill="var(--s2)"/>`).join(''):'';
+  const step=W<600?3:1;
+  const labs=data.map((d,i)=>i%step===0||i===n-1?`<text class="ax" x="${x(i)}" y="${H-7}" text-anchor="middle">${mLabel(d.m)}</text>`:'').join('');
+  host.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Monthly GMV bars with the plan line">${g}${bars}${plan}${labs}<rect x="${L}" y="${T}" width="${W-L-R}" height="${H-T-B}" fill="transparent" class="hit"/></svg>`;
+  const sv=host.querySelector('svg'), tp=tipEl(host);
+  sv.querySelector('.hit').addEventListener('pointermove',e=>{const r=sv.getBoundingClientRect(),px=(e.clientX-r.left)/r.width*W,i=Math.max(0,Math.min(n-1,Math.floor((px-L)/bw))),d=data[i];
+    tp.innerHTML=`<b>${mLabel(d.m,1)}</b><br><span>GMV</span> ${brl(d.v)}`+(d.t?`<br><span>Plan</span> ${brl(d.t)} (${sp(d.v/d.t-1,0)})`:'');
+    tp.style.left=Math.min(Math.max(x(i)/W*r.width,80),r.width-80)+'px';tp.style.top=(y(Math.max(d.v,d.t||0))/H*r.height)+'px';tp.classList.add('on')});
+  sv.querySelector('.hit').addEventListener('pointerleave',()=>tp.classList.remove('on'));
+  sv.querySelector('.hit').addEventListener('click',e=>{const r=sv.getBoundingClientRect(),i=Math.max(0,Math.min(n-1,Math.floor(((e.clientX-r.left)/r.width*W-L)/bw)));setMonth(months[i])});
+}
+
+function renderDelivery(){
+  const c=v=>v>=4?'var(--ok)':v>=3?'var(--warn)':'var(--bad)';
+  $('delivery').innerHTML=deliv.map(d=>`<div class="dbar"><span>${d.delivery_bucket.slice(3)}<small>${(d.share_of_orders*100).toFixed(1)}% of orders</small></span><div class="track"><div class="fill" style="width:${d.avg_review_score/5*100}%;background:${c(d.avg_review_score)}"></div></div><span class="n">${d.avg_review_score.toFixed(2)} ★<small>${(d.one_star_rate*100).toFixed(0)}% 1-star</small></span></div>`).join('');
+  const early=deliv[0], worst=deliv[deliv.length-1], late=deliv.filter(d=>d.delivery_bucket>'4');
+  const lateShare=late.reduce((s,d)=>s+d.share_of_orders,0);
+  $('deliveryNote').innerHTML=`Orders 8+ days late average <b>${worst.avg_review_score.toFixed(2)}</b> stars vs. <b>${early.avg_review_score.toFixed(2)}</b> when they arrive well early, and <b>${(worst.one_star_rate*100).toFixed(0)}%</b> of them get 1 star. Late orders are only ${(lateShare*100).toFixed(1)}% of deliveries, so fixing the slowest routes is the cheapest way to lift the review score.`;
+}
+
+function renderCats(){
+  const m=state.month, py=months.includes(m)?String(+m.slice(0,4)-1)+m.slice(4):null;
+  const cur=cats.filter(c=>c.month_start===m).slice(0,10), prev=Object.fromEntries(cats.filter(c=>c.month_start===py).map(c=>[c.category,c.gmv]));
+  const mx=cur[0]?.gmv||1;
+  $('catSub').textContent=`${mLabel(m,1)} · top 10 by GMV`;
+  $('cats').innerHTML=`<thead><tr><th>Category</th><th>GMV</th><th>YoY</th><th class="hide-sm">Orders</th><th>Review</th><th class="hide-sm">On time</th></tr></thead><tbody>`+
+    cur.map(c=>{const y=prev[c.category]?c.gmv/prev[c.category]-1:null;return `<tr><td>${c.category}</td><td><span class="wbar" style="width:${Math.max(3,c.gmv/mx*60)}px"></span>${brl(c.gmv)}</td><td class="${y==null?'':y>0?'good':'badc'}">${sp(y,0)}</td><td class="hide-sm">${c.orders.toLocaleString()}</td><td>${c.avg_review_score?.toFixed(2)??'–'}</td><td class="hide-sm">${c.on_time_rate==null?'–':(c.on_time_rate*100).toFixed(0)+'%'}</td></tr>`}).join('')+'</tbody>';
+}
+
+function renderStates(){
+  const cur=states.filter(s=>s.month_start===state.month).slice(0,10);
+  $('stateSub').textContent=`${mLabel(state.month,1)} · top 10 by GMV`;
+  $('states').innerHTML=`<thead><tr><th>State</th><th>GMV</th><th class="hide-sm">Orders</th><th>Days to deliver</th><th>On time</th><th>Review</th></tr></thead><tbody>`+
+    cur.map(s=>`<tr><td>${s.state}</td><td>${brl(s.gmv)}</td><td class="hide-sm">${s.orders.toLocaleString()}</td><td>${s.avg_delivery_days?.toFixed(1)??'–'}</td><td class="${s.on_time_rate<.9?'badc':''}">${s.on_time_rate==null?'–':(s.on_time_rate*100).toFixed(0)+'%'}</td><td>${s.avg_review_score?.toFixed(2)??'–'}</td></tr>`).join('')+'</tbody>';
+}
+
+function renderCohort(){
+  const cs=[...new Set(coh.map(c=>c.cohort_month))].sort().filter(c=>c<='2018-02'), N=6;
+  const get=(c,k)=>coh.find(x=>x.cohort_month===c&&x.months_since_first===k);
+  const mx=.01, col=v=>`color-mix(in srgb,var(--s1) ${Math.min(100,Math.round(v/mx*85)+6)}%,transparent)`;
+  let h=`<div class="heat" style="grid-template-columns:72px 64px repeat(${N},minmax(44px,1fr))"><div class="h"></div><div class="h">Size</div>`+Array.from({length:N},(_,k)=>`<div class="h">M${k+1}</div>`).join('');
+  for(const c of cs){ const sz=coh.find(x=>x.cohort_month===c).cohort_size; h+=`<div class="rl">${mLabel(c)}</div><div class="h">${sz.toLocaleString()}</div>`;
+    for(let k=1;k<=N;k++){const r=get(c,k); h+=r?`<div class="c" style="background:${col(r.retention_rate)}" title="${mLabel(c,1)} cohort, month ${k}: ${(r.retention_rate*100).toFixed(2)}%">${(r.retention_rate*100).toFixed(1)}%</div>`:'<div class="c" style="background:var(--surface-2)">·</div>'} }
+  $('cohort').innerHTML=h+'</div>';
+  const q=D.quality;
+  $('cohortNote').innerHTML=`Only <b>${(q.repeat_people/q.people*100).toFixed(1)}%</b> of ${q.people.toLocaleString()} customers ever placed a second order, and under 1% of any cohort returns in a given month. Growth here is almost entirely new-customer acquisition, which is why the returning-customer KPI stays off track.`;
+}
+
+function renderStatic(){
+  $('defs').innerHTML=cat.map(c=>`<li><b>${c.kpi_name}.</b> ${c.definition}. Target: ${c.target_type==='yoy_growth'?'+'+(c.target_value*100)+'% vs. same month last year':(c.direction==='up'?'at least ':'at most ')+fmt(c.unit,c.target_value)}.</li>`).join('');
+  const q=D.quality;
+  const notes=[
+    `<b>People vs. order IDs.</b> Olist issues a new customer_id on every order (${q.customer_ids.toLocaleString()} IDs), so customers are counted by customer_unique_id (${q.people.toLocaleString()} people). Counting the wrong ID would make repeat buying look like zero.`,
+    `<b>Complete months only.</b> ${q.orders_excluded_partial_months} orders from late 2016 and September/October 2018 are left out of the scorecard because those months are only partly in the export.`,
+    `<b>Recent delivery figures run fast.</b> Orders still in transit when the data was exported have no delivery date yet, so the last couple of months only include deliveries that already arrived.`,
+    `<b>One review per order.</b> ${q.orders_with_multiple_reviews} orders were reviewed more than once; the latest answer is used.`,
+    `<b>Lost orders.</b> ${q.lost_orders.toLocaleString()} canceled or unavailable orders are excluded from GMV but counted in the cancellation rate.`,
+    `<b>Categories.</b> ${q.untranslated_or_blank_category_products} products have a blank or untranslated category and keep a readable label instead of dropping out.`,
+    `<b>Targets are illustrative.</b> Olist didn't publish its plan, so targets were set for this project in the KPI catalog and can be changed in one place.`,
+  ];
+  $('notes').innerHTML=notes.map(n=>`<li>${n}</li>`).join('');
+  $('lineage').innerHTML=`Built from <code>reporting.rpt_kpi_monthly</code> and four supporting marts (dbt) · ${q.raw_orders.toLocaleString()} orders · Olist Brazilian E-Commerce Public Dataset, CC BY-NC-SA 4.0 · exported ${D.generated} · <a href="https://github.com/evannwilsonn/commerce-pulse">github.com/evannwilsonn/commerce-pulse</a>`;
+}
+
+function setMonth(m){ state.month=m; $('month').value=m; renderAll(); }
+function renderAll(){ renderBrief(); renderScorecard(); renderGmv(); renderCats(); renderStates(); }
+$('month').innerHTML=[...months].reverse().map(m=>`<option value="${m}">${mLabel(m,1)}</option>`).join('');
+$('month').addEventListener('change',e=>setMonth(e.target.value));
+document.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>{state.cmp=b.dataset.c;document.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-pressed',x===b));renderScorecard()}));
+let rt; addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(renderGmv,150)});
+renderStatic(); renderDelivery(); renderCohort(); renderAll();
+})();
+</script>
+</body>
+</html>

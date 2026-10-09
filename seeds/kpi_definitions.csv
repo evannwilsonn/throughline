@@ -1,0 +1,12 @@
+kpi_id,kpi_name,category,definition,unit,direction,target_type,target_value,sort_order
+gmv,Gross merchandise value,Growth,Item price plus freight on orders that were not canceled or unavailable,currency,up,yoy_growth,0.20,1
+orders,Orders,Growth,Orders placed that were not canceled or unavailable,count,up,yoy_growth,0.20,2
+aov,Average order value,Growth,GMV divided by orders,currency,up,absolute,160,3
+active_customers,Active customers,Customers,Distinct people (customer_unique_id) who placed a valid order in the month,count,up,yoy_growth,0.20,4
+repeat_customer_rate,Returning customer share,Customers,Share of the month's customers who had ordered before,percent,up,absolute,0.05,5
+on_time_rate,On-time delivery,Operations,Share of delivered orders that arrived on or before the promised date,percent,up,absolute,0.92,6
+avg_delivery_days,Days to deliver,Operations,Average days from purchase to delivery for delivered orders,days,down,absolute,12,7
+cancel_rate,Cancellation rate,Operations,Share of all orders that ended canceled or unavailable,percent,down,absolute,0.01,8
+avg_review_score,Average review score,Experience,Mean 1-5 review score for orders purchased in the month,score,up,absolute,4.2,9
+freight_ratio,Freight share of GMV,Unit economics,Freight charges divided by GMV,percent,down,absolute,0.15,10
+active_sellers,Active sellers,Marketplace,Distinct sellers with at least one valid order item in the month,count,up,yoy_growth,0.20,11

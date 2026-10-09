@@ -1,0 +1,29 @@
+version: 2
+
+sources:
+  - name: olist
+    description: >
+      Olist Brazilian E-Commerce Public Dataset (CC BY-NC-SA 4.0): about 100k real, anonymized marketplace
+      orders from 2016-2018. Landed by ingest/load_raw.py with every column as text plus audit columns.
+    schema: raw_olist
+    loaded_at_field: _loaded_at
+    freshness:
+      warn_after: {count: 7, period: day}
+    tables:
+      - name: orders
+        description: One row per order. customer_id is per order, not per person (see customers).
+      - name: order_items
+        description: One row per item in an order, with its seller, price and freight.
+      - name: order_payments
+        description: One row per payment. Orders can be split across cards and vouchers.
+      - name: order_reviews
+        description: Post-delivery surveys. Some orders have more than one review, and some review_ids repeat across orders.
+      - name: customers
+        description: customer_id (one per order) mapped to customer_unique_id (one per person).
+      - name: sellers
+      - name: products
+        description: Product attributes. Column names keep Olist's original "lenght" spelling.
+      - name: category_translation
+        description: Portuguese to English category names. A few categories are missing.
+      - name: _extract_manifest
+        freshness: null

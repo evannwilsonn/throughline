@@ -1,0 +1,22 @@
+version: 2
+seeds:
+  - name: kpi_definitions
+    description: >
+      The governed KPI catalog: one definition, unit, direction and target per metric, so every
+      chart and tile computes a KPI the same way. Targets are illustrative plan figures set for
+      this project (Olist did not publish its internal targets).
+    config:
+      column_types:
+        target_value: double
+        sort_order: integer
+    columns:
+      - name: kpi_id
+        data_tests: [unique, not_null]
+      - name: direction
+        data_tests:
+          - accepted_values:
+              arguments: {values: [up, down]}
+      - name: target_type
+        data_tests:
+          - accepted_values:
+              arguments: {values: [absolute, yoy_growth]}

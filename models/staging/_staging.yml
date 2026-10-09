@@ -1,0 +1,77 @@
+version: 2
+
+models:
+  - name: stg_olist__orders
+    columns:
+      - name: order_id
+        data_tests: [unique, not_null]
+      - name: customer_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments: {to: ref('stg_olist__customers'), field: customer_id}
+      - name: order_status
+        data_tests:
+          - accepted_values:
+              arguments: {values: [delivered, shipped, canceled, unavailable, invoiced, processing, created, approved]}
+      - name: purchased_at
+        data_tests: [not_null]
+
+  - name: stg_olist__order_items
+    data_tests:
+      - unique_combination:
+          arguments: {columns: [order_id, order_item_seq]}
+    columns:
+      - name: order_id
+        data_tests:
+          - relationships:
+              arguments: {to: ref('stg_olist__orders'), field: order_id}
+      - name: item_price
+        data_tests:
+          - not_null
+          - value_between:
+              arguments: {min_value: 0, max_value: 10000}
+      - name: freight_value
+        data_tests:
+          - value_between:
+              arguments: {min_value: 0, max_value: 1000}
+
+  - name: stg_olist__order_payments
+    data_tests:
+      - unique_combination:
+          arguments: {columns: [order_id, payment_seq]}
+    columns:
+      - name: payment_value
+        data_tests:
+          - value_between:
+              arguments: {min_value: 0, max_value: 20000}
+
+  - name: stg_olist__order_reviews
+    columns:
+      - name: review_score
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments: {values: [1, 2, 3, 4, 5]}
+
+  - name: stg_olist__customers
+    columns:
+      - name: customer_id
+        data_tests: [unique, not_null]
+      - name: customer_unique_id
+        data_tests: [not_null]
+
+  - name: stg_olist__sellers
+    columns:
+      - name: seller_id
+        data_tests: [unique, not_null]
+
+  - name: stg_olist__products
+    columns:
+      - name: product_id
+        data_tests: [unique, not_null]
+
+  - name: stg_olist__category_translation
+    columns:
+      - name: category_pt
+        data_tests: [unique, not_null]

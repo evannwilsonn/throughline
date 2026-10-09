@@ -1,0 +1,38 @@
+name: commerce_pulse
+version: "1.0.0"
+config-version: 2
+profile: commerce_pulse
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+analysis-paths: ["analyses"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+models:
+  commerce_pulse:
+    staging:
+      +materialized: view
+      +schema: staging
+    intermediate:
+      +materialized: view
+      +schema: intermediate
+    marts:
+      +materialized: table
+      core:
+        +schema: core
+      reporting:
+        +schema: reporting
+
+seeds:
+  commerce_pulse:
+    +schema: reference
+
+vars:
+  # Complete months only: the dataset starts thin in late 2016 and the export cut off in early Sept 2018.
+  report_start: "2017-01-01"
+  report_end: "2018-08-31"
+  # A KPI within this relative distance of its target is "Watch" rather than "Off track".
+  watch_band: 0.05

@@ -1,0 +1,53 @@
+version: 2
+
+models:
+  - name: fct_orders
+    description: One row per order with value, payment, delivery performance, review and the customer's order sequence.
+    columns:
+      - name: order_id
+        data_tests: [unique, not_null]
+      - name: customer_unique_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments: {to: ref('dim_customers'), field: customer_unique_id}
+      - name: days_to_deliver
+        data_tests:
+          - value_between:
+              arguments: {min_value: 0, max_value: 250}
+      - name: review_score
+        data_tests:
+          - accepted_values:
+              arguments: {values: [1, 2, 3, 4, 5]}
+
+  - name: fct_order_items
+    data_tests:
+      - unique_combination:
+          arguments: {columns: [order_id, order_item_seq]}
+    columns:
+      - name: product_id
+        data_tests:
+          - relationships:
+              arguments: {to: ref('dim_products'), field: product_id}
+      - name: seller_id
+        data_tests:
+          - relationships:
+              arguments: {to: ref('dim_sellers'), field: seller_id}
+
+  - name: dim_customers
+    description: One row per person (customer_unique_id) with cohort month and lifetime value.
+    columns:
+      - name: customer_unique_id
+        data_tests: [unique, not_null]
+
+  - name: dim_products
+    columns:
+      - name: product_id
+        data_tests: [unique, not_null]
+      - name: category
+        data_tests: [not_null]
+
+  - name: dim_sellers
+    columns:
+      - name: seller_id
+        data_tests: [unique, not_null]
