@@ -2,290 +2,338 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Throughline</title>
+<meta name="description" content="Executive KPIs for an e-commerce marketplace from 100,000 real orders, printed as shipping labels.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Martian+Mono:wght@400;500;600&display=swap">
 <style>
+/* A parcel depot: KPIs as white thermal labels on kraft board, verdicts as teal rubber stamps,
+   the drivers as an order's journey. Labels stay white in both themes. */
 :root{
   color-scheme:light;
-  --bg:#f4f5f7;--surface:#ffffff;--surface-2:#f8f9fb;--line:#e3e5ea;--line-2:#d3d6dd;
-  --text:#14161c;--text-2:#4a4f5c;--text-3:#767b88;
-  --s1:#2a6fdb;--s2:#a8630f;--s3:#16865a;--up:#16865a;--down:#c2412d;--focus:#2a6fdb;
-  --ok:#16865a;--ok-bg:rgba(22,134,90,.10);--warn:#a8630f;--warn-bg:rgba(168,99,15,.12);--bad:#c2412d;--bad-bg:rgba(194,65,45,.10);
-  --font:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --board:#d5bf98;--board-2:#c8af84;--board-ink:#3b2f1f;--board-ink-2:#5c4a33;
+  --label:#fcfbf7;--print:#141412;--print-2:#4a4944;--print-3:#6c6a63;--hair:#d9d6cc;
+  --stamp:#0e6f6a;--stamp-wash:rgba(14,111,106,.12);
+  --font:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"Martian Mono",ui-monospace,Menlo,monospace;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  color-scheme:dark;--bg:#0c0c12;--surface:#13131b;--surface-2:#191922;--line:#25252f;--line-2:#33333f;
-  --text:#f2f3f6;--text-2:#b4b7c2;--text-3:#878a96;--s1:#3d7eff;--s2:#c27a1a;--s3:#1fa36b;--up:#4cc38a;--down:#ff7a6b;--focus:#7ea8ff;
-  --ok:#4cc38a;--ok-bg:rgba(76,195,138,.12);--warn:#e0a24a;--warn-bg:rgba(224,162,74,.13);--bad:#ff7a6b;--bad-bg:rgba(255,122,107,.12)}}
+  color-scheme:dark;
+  --board:#24211c;--board-2:#2e2a23;--board-ink:#e9dfcc;--board-ink-2:#bfb29b;
+  --label:#f4f2ec;--print:#141412;--print-2:#45443f;--print-3:#66645d;--hair:#d4d1c7;
+  --stamp:#0e6f6a;--stamp-wash:rgba(14,111,106,.14)}}
 :root[data-theme="dark"]{
-  color-scheme:dark;--bg:#0c0c12;--surface:#13131b;--surface-2:#191922;--line:#25252f;--line-2:#33333f;
-  --text:#f2f3f6;--text-2:#b4b7c2;--text-3:#878a96;--s1:#3d7eff;--s2:#c27a1a;--s3:#1fa36b;--up:#4cc38a;--down:#ff7a6b;--focus:#7ea8ff;
-  --ok:#4cc38a;--ok-bg:rgba(76,195,138,.12);--warn:#e0a24a;--warn-bg:rgba(224,162,74,.13);--bad:#ff7a6b;--bad-bg:rgba(255,122,107,.12)}
+  color-scheme:dark;
+  --board:#24211c;--board-2:#2e2a23;--board-ink:#e9dfcc;--board-ink-2:#bfb29b;
+  --label:#f4f2ec;--print:#141412;--print-2:#45443f;--print-3:#66645d;--hair:#d4d1c7;
+  --stamp:#0e6f6a;--stamp-wash:rgba(14,111,106,.14)}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 var(--font)}
-:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:6px}
-.wrap{max-width:1320px;margin:0 auto;padding:24px 20px 48px}
-header.top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:16px}
-.brand h1{margin:0;font-size:24px;font-weight:700;letter-spacing:-.01em}
-.brand p{margin:4px 0 0;color:var(--text-2);font-size:14px}
-.badge{display:inline-block;margin-left:8px;font:500 11px var(--mono);color:var(--text-3);border:1px solid var(--line-2);border-radius:999px;padding:2px 8px;vertical-align:3px}
-.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-select{font:500 13px var(--font);color:var(--text);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:9px 12px;cursor:pointer}
-.seg{display:flex;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:3px}
-.seg button{font:500 13px var(--font);color:var(--text-2);background:none;border:0;border-radius:7px;padding:7px 12px;cursor:pointer}
-.seg button[aria-pressed="true"]{background:var(--surface-2);color:var(--text);box-shadow:inset 0 0 0 1px var(--line-2)}
-.brief{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:12px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:center}
-.brief p{margin:0;font-size:15.5px;line-height:1.55;max-width:90ch}
-.brief p b{font-weight:600}
-.tally{display:flex;gap:8px;flex-wrap:wrap}
-.pill{display:inline-flex;align-items:center;gap:6px;font:600 12px var(--font);border-radius:999px;padding:3px 10px;white-space:nowrap}
-.pill.ok{color:var(--ok);background:var(--ok-bg)}.pill.warn{color:var(--warn);background:var(--warn-bg)}.pill.bad{color:var(--bad);background:var(--bad-bg)}.pill.na{color:var(--text-3);background:var(--surface-2)}
-.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
-.cat-h{margin:18px 2px 8px;font:600 12px var(--font);letter-spacing:.06em;text-transform:uppercase;color:var(--text-3)}
-.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.tile{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:4px;min-width:0}
-.tile .row{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.tile .eyebrow{font:500 10.5px var(--font);letter-spacing:.06em;text-transform:uppercase;color:var(--text-3)}
-.tile .lbl{font-size:13px;font-weight:500;color:var(--text-2)}
-.tile .v{font-size:26px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-.tile .cmp{font-size:12.5px;color:var(--text-3);display:flex;gap:12px;flex-wrap:wrap}
-.tile .cmp b{font-weight:600}
-.tile svg{display:block;width:100%;height:34px;margin-top:4px}
-.good{color:var(--up)}.badc{color:var(--down)}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;min-width:0}
-.card header{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px}
-.card h2{margin:0;font-size:15px;font-weight:600}
-.card .sub{font-size:12.5px;color:var(--text-3)}
-.full{grid-column:1/-1}
-.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--text-2)}
-.legend i{display:inline-block;width:12px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
-.legend i.ln{height:2px;vertical-align:3px}
-.plot{position:relative}
-.plot svg{display:block;width:100%;height:auto;overflow:visible}
-.ax{font:11px var(--font);fill:var(--text-3)}
-.gridl{stroke:var(--line);stroke-width:1}
-.tip{position:absolute;pointer-events:none;background:var(--surface);border:1px solid var(--line-2);border-radius:10px;padding:8px 10px;font-size:12.5px;white-space:nowrap;opacity:0;transform:translate(-50%,calc(-100% - 12px));transition:opacity .12s;z-index:3;box-shadow:0 8px 24px rgba(0,0,0,.18)}
-.tip.on{opacity:1}.tip b{font-weight:600}.tip span{color:var(--text-2)}
-.callout{margin:12px 0 0;padding:10px 12px;border:1px solid var(--line);background:var(--surface-2);border-radius:8px;font-size:13.5px;color:var(--text-2)}
-.callout b{color:var(--text);font-weight:600}
-table{width:100%;border-collapse:collapse;font-size:13.5px}
-th{font-weight:500;color:var(--text-3);text-align:right;padding:8px 6px;border-bottom:1px solid var(--line);font-size:12px;white-space:nowrap}
-th:first-child,td:first-child{text-align:left}
-td{padding:9px 6px;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-td .wbar{display:inline-block;height:8px;border-radius:3px;background:var(--s1);margin-right:8px;vertical-align:0}
-.dbar{display:grid;grid-template-columns:150px minmax(0,1fr) 92px;gap:10px;align-items:center;padding:6px 0;font-size:13px}
-.dbar .track{height:14px;background:var(--surface-2);border-radius:4px;overflow:hidden}
-.dbar .fill{height:100%;border-radius:4px}
-.dbar .n{text-align:right;font-variant-numeric:tabular-nums;color:var(--text-2)}
-.dbar small{display:block;color:var(--text-3);font-size:11.5px}
-.heat{display:grid;gap:3px;font-size:11.5px;font-variant-numeric:tabular-nums}
-.heat .c{padding:5px 2px;text-align:center;border-radius:4px;color:var(--text)}
-.heat .h{color:var(--text-3);text-align:center;padding:4px 0}
-.heat .rl{color:var(--text-2);text-align:left;padding:5px 4px;white-space:nowrap}
-.defs{margin:0;padding:0;list-style:none;font-size:13px}
-.defs li{padding:7px 0;border-bottom:1px solid var(--line);color:var(--text-2)}
-.defs li:last-child{border-bottom:0}
-.defs b{color:var(--text);font-weight:600}
-footer.lin{margin-top:18px;color:var(--text-3);font-size:12.5px;line-height:1.6}
-footer.lin code{font-family:var(--mono);font-size:12px;color:var(--text-2)}
-footer.lin a{color:var(--text-2)}
-@media (max-width:1100px){.tiles{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media (max-width:900px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.grid{grid-template-columns:1fr}.brief{grid-template-columns:1fr}}
-@media (max-width:560px){.tiles{grid-template-columns:1fr}.hide-sm{display:none}.dbar{grid-template-columns:110px minmax(0,1fr) 80px}}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--board);color:var(--board-ink);font:15.5px/1.55 var(--font)}
+:focus-visible{outline:3px solid var(--stamp);outline-offset:2px}
+.wrap{max-width:1320px;margin:0 auto;padding:22px clamp(16px,3vw,36px) 50px}
+a{color:inherit}
+
+/* depot header */
+.depot{display:flex;justify-content:space-between;align-items:flex-end;gap:12px 24px;flex-wrap:wrap;padding-bottom:14px;border-bottom:2px dashed var(--board-ink-2)}
+.name{font:800 clamp(30px,4.6vw,50px)/1 var(--font);letter-spacing:-.035em;margin:0;font-variation-settings:"opsz" 96}
+.sub{margin:6px 0 0;color:var(--board-ink-2);max-width:64ch}
+.ship{display:flex;flex-direction:column;gap:4px;font:600 12px var(--mono);color:var(--board-ink-2);text-transform:uppercase;letter-spacing:.04em}
+.ship select{font:600 15px var(--mono);color:var(--print);background:var(--label);border:2px solid var(--print);padding:7px 34px 7px 10px;appearance:none;cursor:pointer;
+  background-image:linear-gradient(45deg,transparent 50%,var(--print) 50%),linear-gradient(135deg,var(--print) 50%,transparent 50%);background-position:calc(100% - 16px) 55%,calc(100% - 11px) 55%;background-size:5px 5px;background-repeat:no-repeat}
+
+/* packing slip */
+.slip{background:var(--label);color:var(--print);margin:20px 0 6px;padding:18px 22px 18px;max-width:880px;position:relative;transform:rotate(-.4deg)}
+.slip::before{content:"";position:absolute;left:0;right:0;top:-6px;height:6px;background:linear-gradient(-45deg,var(--label) 4px,transparent 0) 0 0/10px 6px repeat-x,linear-gradient(45deg,var(--label) 4px,transparent 0) 0 0/10px 6px repeat-x}
+.slip .hd{font:500 12px var(--mono);color:var(--print-3);border-top:1px dashed var(--hair);padding-top:8px;margin-top:12px}
+.slip h2{font:700 clamp(22px,2.8vw,32px)/1.15 var(--font);letter-spacing:-.02em;margin:0 0 8px;max-width:30ch}
+.slip p{margin:0;color:var(--print-2);font-size:16px;max-width:70ch}
+
+/* label wall */
+h2.sec{font:800 26px/1.15 var(--font);letter-spacing:-.025em;margin:38px 0 4px}
+.dek{margin:0 0 16px;color:var(--board-ink-2);max-width:74ch}
+.wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(262px,1fr));gap:16px}
+.m.mt{margin-top:8px}
+.lbl{background:var(--label);color:var(--print);border:2px solid var(--print);border-radius:4px;padding:0;text-align:left;font:inherit;cursor:pointer;position:relative;display:flex;flex-direction:column;min-height:206px}
+.lbl{transition:transform .15s ease-out}.lbl:hover{transform:translateY(-1px)}
+@media (prefers-reduced-motion:reduce){.lbl{transition:none}}
+.lbl.sel{outline:3px solid var(--stamp);outline-offset:3px}
+.lbl .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:9px 12px 8px;border-bottom:2px solid var(--print);font:700 15px/1.2 var(--font)}
+
+.lbl .val{position:relative;padding:12px 12px 10px;border-bottom:2px solid var(--print);font:600 30px/1.05 var(--mono);letter-spacing:-.04em}
+.lbl .kn{padding:2px 12px 0;font:700 15px/1.25 var(--font)}
+.lbl .rows{display:grid;grid-template-columns:auto 1fr;gap:1px 10px;padding:8px 12px 8px;border-bottom:2px solid var(--print);font:400 12px var(--mono);color:var(--print-2)}
+.lbl .rows b{font-weight:600;color:var(--print);text-align:right;white-space:nowrap}
+.lbl .rows i{font-style:normal}.lbl .rows .sh{display:none}
+.lbl svg.bc{display:block;width:calc(100% - 24px);height:34px;margin:auto 12px 4px}
+.lbl .hr{font:500 10.5px/1 var(--mono);color:var(--print-3);text-align:center;letter-spacing:.2em;padding:0 0 8px}
+.stamp{position:absolute;right:10px;top:50%;margin-top:-13px;font:800 13px/1 var(--font);letter-spacing:.06em;text-transform:uppercase;color:var(--stamp);padding:6px 8px 5px;transform:rotate(-7deg);mix-blend-mode:multiply}
+.stamp.on{border:2px solid var(--stamp)}
+.stamp.watch{border:2px solid var(--stamp);box-shadow:0 0 0 2px var(--label),0 0 0 4px var(--stamp)}
+.stamp.off{background:var(--stamp);color:var(--label);mix-blend-mode:normal}
+.stamp.none{color:var(--print-3);border:1px dashed var(--print-3);font-weight:600;letter-spacing:.02em}
+@media (max-width:600px){.wall{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.lbl{min-height:0}.lbl .top{font-size:13.5px}.lbl .val{font-size:21px;padding:8px 10px 8px}.lbl .rows{padding:6px 10px 0;font-size:11.5px;gap:0 6px}.lbl .top{padding:8px 10px 6px}.lbl svg.bc{width:calc(100% - 20px);margin:8px 10px 8px;height:26px}.lbl .rows .lg{display:none}.lbl .rows .sh{display:inline}.stamp{position:static;display:inline-block;margin:8px 0 0;transform:rotate(-3deg);font-size:11.5px}.lbl .val{display:flex;flex-direction:column;align-items:flex-start}.lbl .hr{letter-spacing:0}}
+@media (max-width:900px){.leg .stars small{display:block;margin-top:2px}}
+
+/* tracking panel */
+.track{background:var(--label);color:var(--print);margin-top:16px;padding:16px 18px 18px;outline:3px solid var(--stamp);outline-offset:3px}
+.track h3{font:700 20px/1.2 var(--font);margin:0}
+.track .m{font:500 12px var(--mono);color:var(--print-3);margin:2px 0 10px}
+.track p{margin:8px 0 0;color:var(--print-2);font-size:14.5px;max-width:80ch}
+svg.chart{display:block;width:100%;overflow:visible}
+.ax{font:500 11px var(--mono);fill:var(--print-3)}
+.lb{font:600 11px var(--mono);fill:var(--print)}
+
+/* journey */
+.journey{background:var(--label);color:var(--print);padding:16px 18px 18px}
+.legs{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:0;margin-top:8px}
+.leg{padding:10px 10px 12px;border-left:1px dashed var(--hair);position:relative}
+.leg:first-child{border-left:0}
+.leg .when{font:600 12px/1.3 var(--mono);text-transform:uppercase;color:var(--print-3);min-height:28px}
+.leg .stars{font:600 26px/1 var(--mono);margin:6px 0 2px;letter-spacing:-.03em}
+.leg .stars small{font-size:12px;color:var(--print-3);letter-spacing:0}
+.leg .bar{height:8px;background:var(--hair);margin:8px 0 4px;position:relative}
+.leg .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--print)}
+.leg .bar i.st{background:var(--stamp)}
+.leg .k{font:400 12px/1.4 var(--mono);color:var(--print-2)}
+.route{position:relative;height:26px;margin:4px 0 0}
+.route svg{width:100%;height:26px;display:block}
+@media (max-width:900px){.legs{grid-template-columns:repeat(2,minmax(0,1fr))}.leg:nth-child(odd){border-left:0}.route{display:none}}
+.callout{margin:12px 0 0;font:500 15px/1.45 var(--font);color:var(--print)}
+.callout b{background:var(--stamp-wash);padding:0 .2em}
+
+/* lower row */
+.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:1000px){.three{grid-template-columns:1fr}}
+.card{background:var(--label);color:var(--print);padding:14px 16px 16px;min-width:0}
+.card h3{font:700 17px/1.2 var(--font);margin:0 0 4px}
+.card .m{font:500 13px var(--font);color:var(--print-3);margin:0 0 10px}
+table.t{width:100%;border-collapse:collapse;font-size:13.5px}
+.t th{font:600 11px var(--mono);text-transform:uppercase;letter-spacing:.03em;color:var(--print-3);text-align:right;padding:6px 4px;border-bottom:2px solid var(--print)}
+.t th:first-child,.t td:first-child{text-align:left}
+.t td{padding:6px 4px;border-bottom:1px dashed var(--hair);text-align:right;font-family:var(--mono);font-size:12px;white-space:nowrap}
+.t td:first-child{font-family:var(--font);font-size:13.5px;white-space:normal}
+.mbar{display:inline-block;height:8px;background:var(--print);vertical-align:middle;margin-right:5px}
+.coh{display:grid;gap:2px;font:500 11px var(--mono)}
+.coh span{display:block;height:16px}
+.coh .h{color:var(--print-3);text-align:center}
+.declare{background:var(--label);color:var(--print);padding:14px 18px 16px;margin-top:16px;columns:2 380px;column-gap:32px;font-size:14px}
+.declare h3{column-span:all;font:800 15px var(--font);text-transform:uppercase;letter-spacing:.05em;margin:0 0 8px;padding-bottom:6px;border-bottom:2px solid var(--print)}
+.declare p{margin:0 0 8px;break-inside:avoid;color:var(--print-2)}
+.declare b{color:var(--print)}
+footer{margin-top:30px;padding-top:12px;border-top:2px dashed var(--board-ink-2);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font:500 12px var(--mono);color:var(--board-ink-2)}
+.themebtn{font:600 12px var(--font);background:none;border:1px solid var(--board-ink-2);color:var(--board-ink);padding:4px 10px;cursor:pointer}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header class="top">
-    <div class="brand">
-      <h1>Throughline <span class="badge">Real public data</span></h1>
-      <p>Executive KPI dashboard · Olist marketplace, Brazil · values in R$</p>
+  <header class="depot">
+    <div>
+      <h1 class="name">Throughline</h1>
+      <p class="sub" id="sub"></p>
     </div>
-    <div class="controls">
-      <label><span hidden>Month</span><select id="month" aria-label="Reporting month"></select></label>
-      <div class="seg" role="group" aria-label="Compare against">
-        <button type="button" data-c="target" aria-pressed="true">vs. target</button>
-        <button type="button" data-c="yoy" aria-pressed="false">vs. last year</button>
-      </div>
-    </div>
+    <label class="ship">Ship date<select id="month" aria-label="Choose the month"></select></label>
   </header>
 
-  <section class="brief" aria-label="Summary"><p id="brief"></p><div class="tally" id="tally"></div></section>
-
-  <section id="scorecard" aria-label="KPI scorecard"></section>
-
-  <section class="grid">
-    <article class="card full">
-      <header><h2>GMV by month vs. plan</h2>
-        <div class="legend"><span><i style="background:var(--s1)"></i>Actual GMV</span><span><i class="ln" style="background:var(--s2)"></i>Plan (last year + 20%)</span></div></header>
-      <div class="plot" id="gmv"></div>
-    </article>
-    <article class="card">
-      <header><h2>Late deliveries drive bad reviews</h2><span class="sub">Delivered orders, Jan 2017 to Aug 2018</span></header>
-      <div id="delivery"></div>
-      <p class="callout" id="deliveryNote"></p>
-    </article>
-    <article class="card">
-      <header><h2>Top categories</h2><span class="sub" id="catSub"></span></header>
-      <div style="overflow-x:auto"><table id="cats"></table></div>
-    </article>
-    <article class="card">
-      <header><h2>Customers rarely come back</h2><span class="sub">Share of each monthly cohort ordering again N months later</span></header>
-      <div id="cohort" style="overflow-x:auto"></div>
-      <p class="callout" id="cohortNote"></p>
-    </article>
-    <article class="card">
-      <header><h2>States</h2><span class="sub" id="stateSub"></span></header>
-      <div style="overflow-x:auto"><table id="states"></table></div>
-    </article>
-    <article class="card">
-      <header><h2>KPI definitions</h2><span class="sub">One governed definition per metric, from <code>seeds/kpi_definitions.csv</code></span></header>
-      <ul class="defs" id="defs"></ul>
-    </article>
-    <article class="card">
-      <header><h2>Data notes</h2><span class="sub">Counted from the warehouse on every build</span></header>
-      <ul class="defs" id="notes"></ul>
-    </article>
+  <section class="slip" aria-live="polite">
+    <h2 id="slipH"></h2>
+    <p id="slipP"></p>
+    <div class="hd" id="slipNo"></div>
   </section>
 
-  <footer class="lin" id="lineage"></footer>
+  <h2 class="sec">The label wall</h2>
+  <p class="dek">Eleven KPIs, each defined once in the governed catalog. The barcode strip on each label is its monthly trend up to the ship date. Select a label for its tracking history.</p>
+  <div class="wall" id="wall"></div>
+  <div class="track" id="track" hidden></div>
+
+  <h2 class="sec">The journey: delivery timing and reviews</h2>
+  <p class="dek" id="jDek"></p>
+  <div class="journey"><div class="route" aria-hidden="true"><svg id="route"></svg></div><div class="legs" id="legs"></div><p class="callout" id="jCall"></p></div>
+
+  <h2 class="sec">Who buys, where it goes, what's inside</h2>
+  <p class="dek" id="lowDek"></p>
+  <div class="three">
+    <div class="card"><h3>Returning customers</h3><p class="m" id="cohM"></p><div class="coh" id="coh"></div><p class="m mt" id="cohN"></p></div>
+    <div class="card"><h3>Destinations</h3><p class="m" id="stM"></p><table class="t" id="states"></table></div>
+    <div class="card"><h3>Contents</h3><p class="m" id="catM"></p><table class="t" id="cats"></table></div>
+  </div>
+
+  <div class="declare" id="declare"></div>
+
+  <footer>
+    <span id="foot"></span>
+    <a href="https://github.com/evannwilsonn/throughline" target="_blank" rel="noopener">github.com/evannwilsonn/throughline</a>
+    <button class="themebtn" id="theme" type="button">Switch theme</button>
+  </footer>
 </div>
-
 <script>
-(async function(){
-const D = window.CP_DATA || await fetch('data.json').then(r=>r.json());
+(async () => {
+const D = window.CP_DATA || await fetch('data.json').then(r => r.json());
+const NS = 'http://www.w3.org/2000/svg';
 const $ = id => document.getElementById(id);
-const objs = t => t.rows.map(r=>Object.fromEntries(t.columns.map((c,i)=>[c,r[i]])));
-const cat = objs(D.kpi_catalog), kpis = objs(D.kpis), cats = objs(D.categories), states = objs(D.states), deliv = objs(D.delivery), coh = objs(D.cohorts);
-const CAT = Object.fromEntries(cat.map(k=>[k.kpi_id,k]));
-const months = [...new Set(kpis.map(r=>r.month_start))].sort();
-const K = {}; kpis.forEach(r=>{(K[r.month_start] ||= {})[r.kpi_id]=r});
-let state = {month: months[months.length-1], cmp:'target'};
+const el = (t, a = {}, p) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; };
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const T = t => t.rows.map(r => Object.fromEntries(t.columns.map((c, i) => [c, r[i]])));
+const cat = T(D.kpi_catalog), kpis = T(D.kpis), cats = T(D.categories), states = T(D.states), deliv = T(D.delivery), coh = T(D.cohorts), Q = D.quality || {};
+const C = Object.fromEntries(cat.map(k => [k.kpi_id, k]));
+const months = [...new Set(kpis.map(k => k.month_start))].sort();
+const mName = m => new Date(m + '-15').toLocaleDateString('en-US', {month: 'long', year: 'numeric'});
+const mShort = m => new Date(m + '-15').toLocaleDateString('en-US', {month: 'short'}) + " '" + m.slice(2, 4);
+const big = v => v >= 1e6 ? (v / 1e6).toFixed(2) + 'M' : v >= 1e4 ? (v / 1e3).toFixed(v >= 1e5 ? 0 : 1) + 'K' : Math.round(v).toLocaleString('en-US');
+function fmt(id, v) {
+  if (v == null) return '–';
+  const u = C[id]?.unit;
+  if (u === 'currency') return 'R$' + (v >= 1e4 ? big(v) : v.toFixed(2));
+  if (u === 'count') return big(v);
+  if (u === 'percent') return (v * 100).toFixed(1) + '%';
+  if (u === 'days') return v.toFixed(1) + ' d';
+  if (u === 'score') return v.toFixed(2) + ' / 5';
+  return String(v);
+}
+function chg(id, v, p) { if (v == null || p == null || p === 0) return null; return C[id]?.unit === 'percent' ? {d: (v - p) * 100, pts: 1} : {d: (v / p - 1) * 100}; }
+const ct = c => c == null ? '–' : (Math.abs(c.d) < .05 ? '±' : c.d > 0 ? '+' : '−') + Math.abs(c.d).toFixed(1) + (c.pts ? ' pts' : '%');
+const ORDER = ['gmv', 'orders', 'aov', 'active_customers', 'repeat_customer_rate', 'on_time_rate', 'avg_delivery_days', 'cancel_rate', 'avg_review_score', 'freight_ratio', 'active_sellers'];
+const STAMP = {'On track': ['on', 'On track'], 'Watch': ['watch', 'Watch'], 'Off track': ['off', 'Off track']};
+let month = months.at(-1), sel = null;
 
-const mLabel = (m,long) => new Date(m+'-15').toLocaleDateString('en-US',long?{month:'long',year:'numeric'}:{month:'short',year:'2-digit'});
-const brl = (v,d) => { if(v==null) return '–'; const a=Math.abs(v); return a>=1e6?'R$'+(v/1e6).toFixed(2)+'M':a>=1e4?'R$'+Math.round(v/1e3)+'K':'R$'+v.toFixed(d??0); };
-const fmt = (unit,v) => v==null?'–': unit==='currency'?brl(v,2): unit==='percent'?(v*100).toFixed(1)+'%': unit==='days'?v.toFixed(1)+' d': unit==='score'?v.toFixed(2): Math.round(v).toLocaleString('en-US');
-const sp = (v,d=1) => v==null||!isFinite(v)?'–':(v>0?'+':'')+(v*100).toFixed(d)+'%';
-const pillCls = s => s==='On track'?'ok':s==='Watch'?'warn':s==='Off track'?'bad':'na';
-const better = (k,delta) => delta==null?'':((CAT[k].direction==='up')===(delta>0)?'good':'badc');
+$('month').innerHTML = months.slice().reverse().map(m => `<option value="${m}">${mName(m)}</option>`).join('');
+$('month').addEventListener('change', e => { month = e.target.value; render(); });
+$('sub').textContent = `Executive KPIs for the Olist marketplace, from ${big(Q.raw_orders || 0)} real orders, ${mName(months[0])} to ${mName(months.at(-1))}. Currency is Brazilian reais.`;
+const rowsFor = m => ORDER.map(id => kpis.find(k => k.month_start === m && k.kpi_id === id)).filter(Boolean);
 
-function renderBrief(){
-  const m=K[state.month], g=m.gmv, o=m.on_time_rate, r=m.avg_review_score;
-  const st=Object.values(m).filter(x=>x.status);
-  const n={ok:st.filter(x=>x.status==='On track').length,w:st.filter(x=>x.status==='Watch'),b:st.filter(x=>x.status==='Off track')};
-  const vsT=g.target?`, ${g.value>=g.target?'<b class="good">'+sp(g.value/g.target-1,0)+' above</b>':'<b class="badc">'+sp(g.value/g.target-1,0)+' below</b>'} plan`:'';
-  const yoy=g.prior_year_value?` and ${sp(g.value/g.prior_year_value-1,0)} vs. ${mLabel(state.month).split(' ')[0]} last year`:'';
-  const names=a=>a.map(x=>CAT[x.kpi_id].kpi_name.toLowerCase()).join(', ');
-  let s=`<b>${mLabel(state.month,1)}:</b> GMV of <b>${brl(g.value)}</b>${vsT}${yoy}. `;
-  s+= st.length?`${n.ok} of ${st.length} targeted KPIs are on track`+(n.b.length?`; off track: ${names(n.b)}`:'')+(n.w.length?`; watch: ${names(n.w)}`:'')+'. ':'No targets this month (the plan starts once there is a prior year to grow from). ';
-  s+=`${(o.value*100).toFixed(1)}% of deliveries arrived on time and reviews averaged ${r.value.toFixed(2)}.`;
-  $('brief').innerHTML=s;
-  $('tally').innerHTML=st.length?`<span class="pill ok">${n.ok} on track</span><span class="pill warn">${n.w.length} watch</span><span class="pill bad">${n.b.length} off track</span>`:'<span class="pill na">No plan yet</span>';
+function slip() {
+  const rows = rowsFor(month), g = rows.find(r => r.kpi_id === 'gmv');
+  const withT = rows.filter(r => r.status), on = withT.filter(r => r.status === 'On track');
+  const off = withT.filter(r => r.status === 'Off track').map(r => C[r.kpi_id].kpi_name.toLowerCase());
+  const watch = withT.filter(r => r.status === 'Watch').map(r => C[r.kpi_id].kpi_name.toLowerCase());
+  const list = a => a.length > 1 ? a.slice(0, -1).join(', ') + ' and ' + a.at(-1) : a[0];
+  const vsPlan = g && g.target ? (g.value / g.target - 1) * 100 : null, yoy = chg('gmv', g?.value, g?.prior_year_value), mom = chg('gmv', g?.value, g?.prior_month_value);
+  let h = `GMV ${fmt('gmv', g?.value)}`;
+  if (vsPlan != null) h += `, ${Math.abs(vsPlan).toFixed(0)}% ${vsPlan >= 0 ? 'over' : 'under'} plan`;
+  if (yoy) h += ` and ${ct(yoy)} on last year`;
+  else if (mom) h += `, ${ct(mom)} on the month`;
+  $('slipH').textContent = h;
+  let p = withT.length ? `${on.length} of ${withT.length} KPIs with a target are on track.` : 'No KPI has a target this month.';
+  if (off.length) p += ` Off track: ${list(off)}.`;
+  if (watch.length) p += ` To watch: ${list(watch)}.`;
+  if (!yoy) p += ' Plans based on last year start in January 2018, so earlier months show values without a growth target.';
+  $('slipP').textContent = p;
+  $('slipNo').textContent = `Packing slip ${months.indexOf(month) + 1} of ${months.length} · ${mName(month)}`;
 }
 
-function spark(k){
-  const i=months.indexOf(state.month), ms=months.slice(Math.max(0,i-11),i+1), vs=ms.map(m=>K[m][k].value);
-  const W=200,H=34,lo=Math.min(...vs),hi=Math.max(...vs),y=v=>hi===lo?H/2:3+(H-6)*(1-(v-lo)/(hi-lo)),x=j=>ms.length===1?W/2:2+(W-4)*j/(ms.length-1);
-  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="${vs.map((v,j)=>(j?'L':'M')+x(j).toFixed(1)+' '+y(v).toFixed(1)).join('')}" fill="none" stroke="var(--s1)" stroke-width="1.6" vector-effect="non-scaling-stroke"/><circle cx="${x(vs.length-1)}" cy="${y(vs[vs.length-1])}" r="2.5" fill="var(--s1)"/></svg>`;
+function wall() {
+  const rows = rowsFor(month);
+  const upto = months.slice(0, months.indexOf(month) + 1).slice(-12);
+  $('wall').innerHTML = rows.map(k => {
+    const c = C[k.kpi_id], [sc, st] = STAMP[k.status] || ['none', 'no target'];
+    return `<button class="lbl${sel === k.kpi_id ? ' sel' : ''}" type="button" data-id="${k.kpi_id}" aria-expanded="${sel === k.kpi_id}" aria-label="${esc(c.kpi_name)}: ${fmt(k.kpi_id, k.value)}, ${st}">
+      <span class="top"><span>${esc(c.kpi_name)}</span></span>
+      <span class="val">${fmt(k.kpi_id, k.value)}<span class="stamp ${sc}">${st}</span></span>
+      <span class="rows"><span>plan</span><b>${k.target == null ? '–' : fmt(k.kpi_id, k.target)}</b><span><i class="lg">vs last year</i><i class="sh">yr</i></span><b>${ct(chg(k.kpi_id, k.value, k.prior_year_value))}</b><span><i class="lg">vs last month</i><i class="sh">mo</i></span><b>${ct(chg(k.kpi_id, k.value, k.prior_month_value))}</b></span>
+      <svg class="bc" data-bc="${k.kpi_id}" aria-hidden="true"></svg><span class="hr">${mShort(upto[0]).toUpperCase()} – ${mShort(upto.at(-1)).toUpperCase()}</span>
+    </button>`;
+  }).join('');
+  document.querySelectorAll('svg.bc').forEach(svg => {
+    const id = svg.dataset.bc, vals = upto.map(m => kpis.find(k => k.month_start === m && k.kpi_id === id)?.value ?? null);
+    const W = svg.clientWidth || 240, H = 34, n = vals.length, bw = W / n;
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    const v = vals.filter(x => x != null), lo = Math.min(...v), hi = Math.max(...v);
+    vals.forEach((x, i) => {
+      if (x == null) return;
+      const h = Math.max(2, x / hi * H);  // zero-based, so small moves stay small
+      // thin barcode bars; the edition's bar is solid and wide
+      const last = i === n - 1;
+      el('rect', {x: i * bw + (last ? bw * .1 : bw * .3), y: H - h, width: last ? bw * .8 : Math.max(1.5, bw * .4), height: h, fill: 'var(--print)'}, svg);
+    });
+  });
+}
+$('wall').addEventListener('click', e => { const b = e.target.closest('.lbl'); if (!b) return; sel = sel === b.dataset.id ? null : b.dataset.id; wall(); track(); if (sel) $('track').scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'nearest'}); });
+
+function track() {
+  const box = $('track');
+  if (!sel) { box.hidden = true; return; }
+  box.hidden = false;
+  const c = C[sel], series = months.map(m => kpis.find(k => k.month_start === m && k.kpi_id === sel)).filter(Boolean);
+  const cur = series.find(s => s.month_start === month);
+  box.innerHTML = `<h3>Tracking: ${esc(c.kpi_name)}</h3><div class="m">${esc(c.category)} · ${c.direction === 'up' ? 'higher is better' : 'lower is better'} · ${c.target_type === 'absolute' ? 'plan ' + fmt(sel, c.target_value) + ' every month' : c.target_type === 'yoy_growth' ? 'plan: ' + Math.round(c.target_value * 100) + '% growth on the same month last year' : 'no plan'}</div><svg class="chart" id="trackSvg" role="img" aria-label="${esc(c.kpi_name)} by month against plan"></svg><p>${esc(c.definition)}. ${cur ? `${mName(month)}: ${fmt(sel, cur.value)}, plan ${cur.target == null ? 'none' : fmt(sel, cur.target)}, previous month ${fmt(sel, cur.prior_month_value)}, a year earlier ${fmt(sel, cur.prior_year_value)}.` : ''}${['avg_delivery_days', 'on_time_rate'].includes(sel) && (Q.in_transit_by_month || {})[month] ? ` ${Q.in_transit_by_month[month]} orders from ${mName(month)} were shipped but never marked delivered, so they are left out of this measure.` : ''}</p>`;
+  const svg = $('trackSvg'), W = Math.max(300, svg.parentElement.clientWidth - 36), H = 170, l = 64, r = 10, t = 12, b = 24;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('height', H);
+  const all = series.flatMap(s => [s.value, s.target]).filter(v => v != null);
+  let lo = Math.min(...all), hi = Math.max(...all); const pad = (hi - lo) * .1 || Math.abs(hi) * .05 || 1; lo -= pad; hi += pad;
+  const x = i => l + i * (W - l - r) / (series.length - 1), y = v => t + (1 - (v - lo) / (hi - lo)) * (H - t - b);
+  [lo + pad, hi - pad].forEach(v => { el('line', {x1: l, x2: W - r, y1: y(v), y2: y(v), stroke: 'var(--hair)'}, svg); const tx = el('text', {x: l - 6, y: y(v) + 4, 'text-anchor': 'end', class: 'ax'}, svg); tx.textContent = fmt(sel, v); });
+  const tg = series.map((s, i) => s.target != null ? `${x(i)},${y(s.target)}` : null).filter(Boolean);
+  if (tg.length > 1) { el('polyline', {points: tg.join(' '), fill: 'none', stroke: 'var(--stamp)', 'stroke-width': 1.6, 'stroke-dasharray': '5 4'}, svg); const f = series.findIndex(s => s.target != null); const tx = el('text', {x: x(f), y: y(series[f].target) - 7, class: 'ax', style: 'fill:var(--stamp)'}, svg); tx.textContent = 'plan'; }
+  el('polyline', {points: series.map((s, i) => `${x(i)},${y(s.value)}`).join(' '), fill: 'none', stroke: 'var(--print)', 'stroke-width': 2}, svg);
+  series.forEach((s, i) => {
+    const on = s.month_start === month;
+    el('circle', {cx: x(i), cy: y(s.value), r: on ? 5.5 : 2.4, fill: on ? 'var(--label)' : 'var(--print)', stroke: 'var(--print)', 'stroke-width': on ? 2.5 : 0}, svg);
+    const si = series.findIndex(q => q.month_start === month);
+    if (on || (i % 3 === 0 && Math.abs(i - si) > 1)) { const tx = el('text', {x: x(i), y: H - 6, 'text-anchor': 'middle', class: on ? 'lb' : 'ax'}, svg); tx.textContent = mShort(s.month_start); }
+  });
 }
 
-function renderScorecard(){
-  const m=K[state.month]; let html='<h2 class="cat-h">Scorecard</h2><div class="tiles">';
-  for(const c of cat){
-    const r=m[c.kpi_id], mom=r.prior_month_value?r.value/r.prior_month_value-1:null, yoy=r.prior_year_value?r.value/r.prior_year_value-1:null;
-    const main = state.cmp==='target'
-      ? (r.target!=null?`<span>Target <b>${fmt(c.unit,r.target)}</b></span>`:'<span>No target yet</span>')
-      : `<span>Last year <b>${fmt(c.unit,r.prior_year_value)}</b></span>`;
-    html+=`<div class="tile" title="${c.definition}"><span class="eyebrow">${c.category}</span><div class="row"><span class="lbl">${c.kpi_name}</span>${state.cmp==='target'?`<span class="pill ${pillCls(r.status)}">${r.status||'n/a'}</span>`:''}</div>
-      <div class="v">${fmt(c.unit,r.value)}</div>
-      <div class="cmp">${main}<span>YoY <b class="${better(c.kpi_id,yoy)}">${sp(yoy)}</b></span><span>MoM <b class="${better(c.kpi_id,mom)}">${sp(mom)}</b></span></div>${spark(c.kpi_id)}</div>`;
-  }
-  $('scorecard').innerHTML=html+'</div>';
+function journey() {
+  const tot = deliv.reduce((a, d) => a + d.orders, 0);
+  $('legs').innerHTML = deliv.map(d => {
+    const name = d.delivery_bucket.replace(/^\d+\.\s*/, '');
+    return `<div class="leg"><div class="when">${esc(name)}</div><div class="stars">${d.avg_review_score.toFixed(2)}<small> avg review</small></div>
+      <div class="bar" title="one-star share"><i class="st" style="width:${d.one_star_rate * 100}%"></i></div><div class="k">${Math.round(d.one_star_rate * 100)}% one-star</div>
+      <div class="bar" title="share of orders"><i style="width:${d.share_of_orders * 100}%"></i></div><div class="k">${(d.share_of_orders * 100).toFixed(1)}% of orders · ${big(d.orders)}</div></div>`;
+  }).join('');
+  const svg = $('route'), W = svg.clientWidth || 1000, n = deliv.length;
+  svg.setAttribute('viewBox', `0 0 ${W} 26`);
+  el('line', {x1: W / n / 2, x2: W - W / n / 2, y1: 13, y2: 13, stroke: 'var(--print)', 'stroke-width': 2, 'stroke-dasharray': '6 4'}, svg);
+  deliv.forEach((d, i) => { const cx = W / n * (i + .5); el('circle', {cx, cy: 13, r: 7, fill: i >= 3 ? 'var(--stamp)' : 'var(--label)', stroke: 'var(--print)', 'stroke-width': 2}, svg); });
+  const early = deliv[0], late = deliv.at(-1);
+  $('jDek').textContent = `Every delivered order since ${mName(months[0])}, grouped by when it arrived against the promised date, with the review the customer left. Across all months, not just the ship date.`;
+  $('jCall').innerHTML = `Orders that arrive 8+ days late average <b>${late.avg_review_score.toFixed(2)} stars</b>, and <b>${Math.round(late.one_star_rate * 100)}% of them get one star</b>; orders 10+ days early average ${early.avg_review_score.toFixed(2)}. Late orders are ${((deliv.slice(3).reduce((a, d) => a + d.orders, 0)) / tot * 100).toFixed(1)}% of deliveries but carry ${Math.round(deliv.slice(3).reduce((a, d) => a + d.orders * d.one_star_rate, 0) / deliv.reduce((a, d) => a + d.orders * d.one_star_rate, 0) * 100)}% of one-star reviews.`;
 }
 
-function tipEl(host){let t=host.querySelector('.tip');if(!t){t=document.createElement('div');t.className='tip';host.appendChild(t)}return t}
-function renderGmv(){
-  const host=$('gmv'), W=Math.max(300,host.clientWidth||900), H=W<500?220:260, L=60, R=12, T=10, B=26, n=months.length;
-  const data=months.map(m=>({m,v:K[m].gmv.value,t:K[m].gmv.target}));
-  const hi=Math.ceil(Math.max(...data.map(d=>Math.max(d.v,d.t||0)))/2e5)*2e5, y=v=>T+(H-T-B)*(1-v/hi);
-  const bw=(W-L-R)/n, x=i=>L+bw*i+bw/2;
-  let g=''; for(let v=0;v<=hi;v+=hi/4) g+=`<line class="gridl" x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}"/><text class="ax" x="${L-8}" y="${y(v)+4}" text-anchor="end">${brl(v)}</text>`;
-  const bars=data.map((d,i)=>`<rect x="${(x(i)-bw*.36).toFixed(1)}" y="${y(d.v).toFixed(1)}" width="${(bw*.72).toFixed(1)}" height="${(y(0)-y(d.v)).toFixed(1)}" rx="3" fill="var(--s1)" opacity="${d.m===state.month?1:.45}"/>`).join('');
-  const tl=data.map((d,i)=>d.t==null?null:[x(i),y(d.t)]).filter(Boolean);
-  const plan=tl.length?`<path d="${tl.map((p,j)=>(j?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join('')}" fill="none" stroke="var(--s2)" stroke-width="2" stroke-dasharray="5 4"/>`+tl.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="3" fill="var(--s2)"/>`).join(''):'';
-  const step=W<600?3:1;
-  const labs=data.map((d,i)=>i%step===0||i===n-1?`<text class="ax" x="${x(i)}" y="${H-7}" text-anchor="middle">${mLabel(d.m)}</text>`:'').join('');
-  host.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Monthly GMV bars with the plan line">${g}${bars}${plan}${labs}<rect x="${L}" y="${T}" width="${W-L-R}" height="${H-T-B}" fill="transparent" class="hit"/></svg>`;
-  const sv=host.querySelector('svg'), tp=tipEl(host);
-  sv.querySelector('.hit').addEventListener('pointermove',e=>{const r=sv.getBoundingClientRect(),px=(e.clientX-r.left)/r.width*W,i=Math.max(0,Math.min(n-1,Math.floor((px-L)/bw))),d=data[i];
-    tp.innerHTML=`<b>${mLabel(d.m,1)}</b><br><span>GMV</span> ${brl(d.v)}`+(d.t?`<br><span>Plan</span> ${brl(d.t)} (${sp(d.v/d.t-1,0)})`:'');
-    tp.style.left=Math.min(Math.max(x(i)/W*r.width,80),r.width-80)+'px';tp.style.top=(y(Math.max(d.v,d.t||0))/H*r.height)+'px';tp.classList.add('on')});
-  sv.querySelector('.hit').addEventListener('pointerleave',()=>tp.classList.remove('on'));
-  sv.querySelector('.hit').addEventListener('click',e=>{const r=sv.getBoundingClientRect(),i=Math.max(0,Math.min(n-1,Math.floor(((e.clientX-r.left)/r.width*W-L)/bw)));setMonth(months[i])});
+function lower() {
+  // cohorts: months since first order, first 6 months, darker = more returning
+  const cms = [...new Set(coh.map(c => c.cohort_month))].sort();
+  const K = 6, max = Math.max(...coh.filter(c => c.months_since_first <= K).map(c => c.retention_rate), .001);
+  const grid = $('coh');
+  grid.style.gridTemplateColumns = `56px repeat(${K}, minmax(0,1fr))`;
+  let html = '<span class="h"></span>' + Array.from({length: K}, (_, i) => `<span class="h">+${i + 1}</span>`).join('');
+  cms.filter(m => m <= month).slice(-8).forEach(m => {
+    html += `<span class="h" style="text-align:left">${mShort(m)}</span>`;
+    for (let k = 1; k <= K; k++) {
+      const c = coh.find(x => x.cohort_month === m && x.months_since_first === k);
+      const later = (() => { const [y, mo] = m.split('-').map(Number); const t = y * 12 + mo - 1 + k; return `${Math.floor(t / 12)}-${String(t % 12 + 1).padStart(2, '0')}`; })();
+      html += c && later <= month ? `<span title="${mShort(m)} cohort, ${k} month${k > 1 ? 's' : ''} on: ${(c.retention_rate * 100).toFixed(2)}% ordered again" style="background:var(--stamp);opacity:${(.12 + c.retention_rate / max * .88).toFixed(2)}"></span>` : '<span style="border:1px dashed var(--hair)"></span>';
+    }
+  });
+  grid.innerHTML = html;
+  $('cohM').textContent = `Share of each month's new customers who ordered again, 1 to ${K} months later`;
+  $('cohN').textContent = `Only ${(Q.repeat_people / Q.people * 100).toFixed(1)}% of ${big(Q.people)} customers ever ordered twice. Growth is almost entirely new customers. Darker = more returned (max ${(max * 100).toFixed(2)}%).`;
+  const s = states.filter(x => x.month_start === month).sort((a, b) => b.gmv - a.gmv).slice(0, 7), smax = s[0]?.gmv || 1;
+  $('stM').textContent = `Top states by GMV, ${mName(month)}`;
+  $('states').innerHTML = `<thead><tr><th>State</th><th>GMV</th><th>Days</th><th>On time</th></tr></thead><tbody>${s.map(x => `<tr><td>${esc(x.state)}</td><td><span class="mbar" style="width:${Math.max(2, x.gmv / smax * 40)}px"></span>R$${big(x.gmv)}</td><td>${x.avg_delivery_days.toFixed(1)}</td><td>${Math.round(x.on_time_rate * 100)}%</td></tr>`).join('')}</tbody>`;
+  const c = cats.filter(x => x.month_start === month).sort((a, b) => b.gmv - a.gmv).slice(0, 7), cmax = c[0]?.gmv || 1;
+  $('catM').textContent = `Top categories by GMV, ${mName(month)}`;
+  $('cats').innerHTML = `<thead><tr><th>Category</th><th>GMV</th><th>Review</th></tr></thead><tbody>${c.map(x => `<tr><td>${esc(x.category)}</td><td><span class="mbar" style="width:${Math.max(2, x.gmv / cmax * 40)}px"></span>R$${big(x.gmv)}</td><td>${x.avg_review_score.toFixed(2)}</td></tr>`).join('')}</tbody>`;
+  $('lowDek').textContent = `Customers and cohorts up to ${mName(month)}; destinations and contents for ${mName(month)}.`;
 }
 
-function renderDelivery(){
-  const c=v=>v>=4?'var(--ok)':v>=3?'var(--warn)':'var(--bad)';
-  $('delivery').innerHTML=deliv.map(d=>`<div class="dbar"><span>${d.delivery_bucket.slice(3)}<small>${(d.share_of_orders*100).toFixed(1)}% of orders</small></span><div class="track"><div class="fill" style="width:${d.avg_review_score/5*100}%;background:${c(d.avg_review_score)}"></div></div><span class="n">${d.avg_review_score.toFixed(2)} ★<small>${(d.one_star_rate*100).toFixed(0)}% 1-star</small></span></div>`).join('');
-  const early=deliv[0], worst=deliv[deliv.length-1], late=deliv.filter(d=>d.delivery_bucket>'4');
-  const lateShare=late.reduce((s,d)=>s+d.share_of_orders,0);
-  $('deliveryNote').innerHTML=`Orders 8+ days late average <b>${worst.avg_review_score.toFixed(2)}</b> stars vs. <b>${early.avg_review_score.toFixed(2)}</b> when they arrive well early, and <b>${(worst.one_star_rate*100).toFixed(0)}%</b> of them get 1 star. Late orders are only ${(lateShare*100).toFixed(1)}% of deliveries, so fixing the slowest routes is the cheapest way to lift the review score.`;
-}
+$('declare').innerHTML = `<h3>Customs declaration: how the numbers are made</h3>
+  <p><b>People, not order IDs.</b> Olist issues a new customer ID on every order (${big(Q.customer_ids)} IDs), so customers are counted as ${big(Q.people)} unique people.</p>
+  <p><b>Complete months only.</b> ${big(Q.orders_excluded_partial_months)} orders from thin months at either end are left out; year-over-year plans look back only to complete months.</p>
+  <p><b>Lost orders.</b> ${big(Q.lost_orders)} canceled or unavailable orders are excluded from GMV but drive the cancellation rate.</p>
+  <p><b>Duplicate reviews.</b> ${big(Q.orders_with_multiple_reviews)} orders were reviewed more than once; the latest answer wins.</p>
+  <p><b>Untranslated categories.</b> ${big(Q.untranslated_or_blank_category_products)} products keep a readable label instead of dropping out.</p>
+  <p><b>Orders without items.</b> ${big(Q.orders_without_items)} orders have no item lines and add nothing to GMV.</p>
+  <p><b>Governed KPIs.</b> Each KPI has one definition, unit, direction and plan in <code>seeds/kpi_definitions.csv</code>; dbt computes it once and sets the status.</p>`;
+$('foot').textContent = `Olist Brazilian E-Commerce Public Dataset · dbt on DuckDB or Snowflake · data exported ${D.generated}`;
+$('theme').addEventListener('click', () => { const r = document.documentElement; const dark = r.dataset.theme ? r.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches; r.dataset.theme = dark ? 'light' : 'dark'; });
 
-function renderCats(){
-  const m=state.month, py=months.includes(m)?String(+m.slice(0,4)-1)+m.slice(4):null;
-  const cur=cats.filter(c=>c.month_start===m).slice(0,10), prev=Object.fromEntries(cats.filter(c=>c.month_start===py).map(c=>[c.category,c.gmv]));
-  const mx=cur[0]?.gmv||1;
-  $('catSub').textContent=`${mLabel(m,1)} · top 10 by GMV`;
-  $('cats').innerHTML=`<thead><tr><th>Category</th><th>GMV</th><th>YoY</th><th class="hide-sm">Orders</th><th>Review</th><th class="hide-sm">On time</th></tr></thead><tbody>`+
-    cur.map(c=>{const y=prev[c.category]?c.gmv/prev[c.category]-1:null;return `<tr><td>${c.category}</td><td><span class="wbar" style="width:${Math.max(3,c.gmv/mx*60)}px"></span>${brl(c.gmv)}</td><td class="${y==null?'':y>0?'good':'badc'}">${sp(y,0)}</td><td class="hide-sm">${c.orders.toLocaleString()}</td><td>${c.avg_review_score?.toFixed(2)??'–'}</td><td class="hide-sm">${c.on_time_rate==null?'–':(c.on_time_rate*100).toFixed(0)+'%'}</td></tr>`}).join('')+'</tbody>';
-}
-
-function renderStates(){
-  const cur=states.filter(s=>s.month_start===state.month).slice(0,10);
-  $('stateSub').textContent=`${mLabel(state.month,1)} · top 10 by GMV`;
-  $('states').innerHTML=`<thead><tr><th>State</th><th>GMV</th><th class="hide-sm">Orders</th><th>Days to deliver</th><th>On time</th><th>Review</th></tr></thead><tbody>`+
-    cur.map(s=>`<tr><td>${s.state}</td><td>${brl(s.gmv)}</td><td class="hide-sm">${s.orders.toLocaleString()}</td><td>${s.avg_delivery_days?.toFixed(1)??'–'}</td><td class="${s.on_time_rate<.9?'badc':''}">${s.on_time_rate==null?'–':(s.on_time_rate*100).toFixed(0)+'%'}</td><td>${s.avg_review_score?.toFixed(2)??'–'}</td></tr>`).join('')+'</tbody>';
-}
-
-function renderCohort(){
-  const cs=[...new Set(coh.map(c=>c.cohort_month))].sort().filter(c=>c<='2018-02'), N=6;
-  const get=(c,k)=>coh.find(x=>x.cohort_month===c&&x.months_since_first===k);
-  const mx=.01, col=v=>`color-mix(in srgb,var(--s1) ${Math.min(100,Math.round(v/mx*85)+6)}%,transparent)`;
-  let h=`<div class="heat" style="grid-template-columns:72px 64px repeat(${N},minmax(44px,1fr))"><div class="h"></div><div class="h">Size</div>`+Array.from({length:N},(_,k)=>`<div class="h">M${k+1}</div>`).join('');
-  for(const c of cs){ const sz=coh.find(x=>x.cohort_month===c).cohort_size; h+=`<div class="rl">${mLabel(c)}</div><div class="h">${sz.toLocaleString()}</div>`;
-    for(let k=1;k<=N;k++){const r=get(c,k); h+=r?`<div class="c" style="background:${col(r.retention_rate)}" title="${mLabel(c,1)} cohort, month ${k}: ${(r.retention_rate*100).toFixed(2)}%">${(r.retention_rate*100).toFixed(1)}%</div>`:'<div class="c" style="background:var(--surface-2)">·</div>'} }
-  $('cohort').innerHTML=h+'</div>';
-  const q=D.quality;
-  $('cohortNote').innerHTML=`Only <b>${(q.repeat_people/q.people*100).toFixed(1)}%</b> of ${q.people.toLocaleString()} customers ever placed a second order, and under 1% of any cohort returns in a given month. Growth here is almost entirely new-customer acquisition, which is why the returning-customer KPI stays off track.`;
-}
-
-function renderStatic(){
-  $('defs').innerHTML=cat.map(c=>`<li><b>${c.kpi_name}.</b> ${c.definition}. Target: ${c.target_type==='yoy_growth'?'+'+(c.target_value*100)+'% vs. same month last year':(c.direction==='up'?'at least ':'at most ')+fmt(c.unit,c.target_value)}.</li>`).join('');
-  const q=D.quality;
-  const notes=[
-    `<b>People vs. order IDs.</b> Olist issues a new customer_id on every order (${q.customer_ids.toLocaleString()} IDs), so customers are counted by customer_unique_id (${q.people.toLocaleString()} people). Counting the wrong ID would make repeat buying look like zero.`,
-    `<b>Complete months only.</b> ${q.orders_excluded_partial_months} orders from late 2016 and September/October 2018 are left out of the scorecard because those months are only partly in the export.`,
-    `<b>Recent delivery figures run fast.</b> Orders still in transit when the data was exported have no delivery date yet, so the last couple of months only include deliveries that already arrived.`,
-    `<b>One review per order.</b> ${q.orders_with_multiple_reviews} orders were reviewed more than once; the latest answer is used.`,
-    `<b>Lost orders.</b> ${q.lost_orders.toLocaleString()} canceled or unavailable orders are excluded from GMV but counted in the cancellation rate.`,
-    `<b>Categories.</b> ${q.untranslated_or_blank_category_products} products have a blank or untranslated category and keep a readable label instead of dropping out.`,
-    `<b>Targets are illustrative.</b> Olist didn't publish its plan, so targets were set for this project in the KPI catalog and can be changed in one place.`,
-  ];
-  $('notes').innerHTML=notes.map(n=>`<li>${n}</li>`).join('');
-  $('lineage').innerHTML=`Built from <code>reporting.rpt_kpi_monthly</code> and four supporting marts (dbt) · ${q.raw_orders.toLocaleString()} orders · Olist Brazilian E-Commerce Public Dataset, CC BY-NC-SA 4.0 · exported ${D.generated} · <a href="https://github.com/evannwilsonn/throughline">github.com/evannwilsonn/throughline</a>`;
-}
-
-function setMonth(m){ state.month=m; $('month').value=m; renderAll(); }
-function renderAll(){ renderBrief(); renderScorecard(); renderGmv(); renderCats(); renderStates(); }
-$('month').innerHTML=[...months].reverse().map(m=>`<option value="${m}">${mLabel(m,1)}</option>`).join('');
-$('month').addEventListener('change',e=>setMonth(e.target.value));
-document.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>{state.cmp=b.dataset.c;document.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-pressed',x===b));renderScorecard()}));
-let rt; addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(renderGmv,150)});
-renderStatic(); renderDelivery(); renderCohort(); renderAll();
+function render() { slip(); wall(); track(); lower(); }
+journey(); render();
+let rt, lw = innerWidth;
+addEventListener('resize', () => { if (innerWidth === lw) return; lw = innerWidth; clearTimeout(rt); rt = setTimeout(() => { wall(); track(); $('route').innerHTML = ''; journey(); }, 120); });
 })();
 </script>
 </body>

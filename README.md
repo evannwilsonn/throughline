@@ -44,7 +44,7 @@ flowchart LR
 - **Duplicate reviews.** 555 orders were reviewed more than once; the latest answer wins.
 - **Lost orders.** Canceled and unavailable orders are excluded from GMV but drive the cancellation rate.
 - **Untranslated categories.** These keep a readable label instead of dropping out of category totals.
-- **In-transit orders.** Orders still in transit at export time have no delivery date, so the latest months' delivery speed looks better than it was. This is noted on the dashboard.
+- **Undelivered orders.** Every month has a few dozen orders that were shipped but never marked delivered (37 to 165 a month). They have no delivery date, so they are left out of delivery speed and on-time rate; the dashboard states the count for the month.
 
 ## Tests
 

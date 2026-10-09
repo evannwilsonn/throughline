@@ -54,6 +54,9 @@ def main() -> None:
             "lost_orders": one("select count(*) from core.fct_orders where not is_valid_sale"),
             "delivered_missing_date": one("select count(*) from core.fct_orders where order_status = 'delivered' and delivered_at is null"),
             "orders_without_items": one("select count(*) from core.fct_orders where item_count = 0"),
+            "in_transit_by_month": {r[0]: r[1] for r in con.execute("""select strftime(order_month, '%Y-%m'), count(*) from core.fct_orders
+                where is_valid_sale and delivered_at is null and order_status not in ('delivered', 'canceled', 'unavailable')
+                  and order_month between date '2017-01-01' and date '2018-08-01' group by 1""").fetchall()},
             "installment_interest": one("select round(sum(payment_gap)) from core.fct_orders where is_valid_sale and not used_voucher and payment_gap > 0"),
         },
     }
